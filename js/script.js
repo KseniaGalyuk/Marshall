@@ -5,6 +5,42 @@ let unlock = true;
 // Функция возвращает устройство на котором открыт сайт   isMobile.any()    вернет true, если сайт открыт на устройстве с тачскрином
 var isMobile = { Android: function () { return navigator.userAgent.match(/Android/i); }, BlackBerry: function () { return navigator.userAgent.match(/BlackBerry/i); }, iOS: function () { return navigator.userAgent.match(/iPhone|iPad|iPod/i); }, Opera: function () { return navigator.userAgent.match(/Opera Mini/i); }, Windows: function () { return navigator.userAgent.match(/IEMobile/i); }, any: function () { return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows()); } };
 //*</ Общие переменные>==========================================================================================
+// делегирование
+window.onload = function () {
+	document.addEventListener("click", documentActions);
+	function documentActions(e) {
+		const targetElement = e.target;
+		if (targetElement.classList.contains('search-form__icon')) {
+			document.querySelector(".search-form").classList.toggle("_active");
+		} else if (!targetElement.closest('.search-form') && document.querySelectorAll(".search-form._active")) {
+			document.querySelector(".search-form").classList.remove("_active");
+		}
+		// Открытие корзины по нажатию на нее
+		if (targetElement.classList.contains('cart-header__icon') || targetElement.closest('.cart-header__icon')) {
+			if (document.querySelector('.cart-list').children.length > 0) {
+				document.querySelector('.cart-header__empty').style.display = "none";
+				document.querySelector('.cart-header__total').style.display = "block";
+				document.querySelector('.cart-header__button').style.display = "flex";
+			} else {
+				document.querySelector('.cart-header__empty').style.display = "block";
+				document.querySelector('.cart-header__total').style.display = "none";
+				document.querySelector('.cart-header__button').style.display = "none";
+			}
+			document.querySelector('.cart-header').classList.toggle("_active");
+			e.preventDefault();
+			// Закрываем при нажатии на любое другое место, кроме кнопки добавления в корзину
+		} else if (!targetElement.closest('.cart-header__content') || targetElement.closest('.cart-header__close')) {
+			document.querySelector('.cart-header').classList.remove("_active")
+		}
+		// Удаление товара из корзины
+		if (targetElement.classList.contains('cart-list__delete')) {
+			const productId = targetElement.closest('.cart-list__item').dataset.cartPid;
+			updateCart(targetElement, productId, false);
+			e.preventDefault();
+		}
+	}
+}
+
 // слайдер swiper
 if (document.querySelector('.swiper')) {
 	new Swiper('.swiper', {  //Класс должен быть указан блока, на который повешан слайдер
@@ -398,41 +434,6 @@ if (spollersArray.length > 0) {
 		}
 	}
 }
-//рейтинг звезд (на 5 звезд), при нажатии добавляется класс и ко всем следующим(блок надо перевернуть флексом, чтобы добавлялось к "предыдущим"), при повторном наведении сбрасывается, при уходе возвращается к предыдущему выбору.Каждой звезде надо задать id в обычном порядке, в одном рейтинге id 1.1, 1.2, 1.3 и т.д, в другом с другой цифры начинается
-const stars = document.querySelectorAll('.star-rating');
-let starActiv = new Array(5); //В этой переменной кол-во рейтингов + 1 (starActiv[0]) и сколько звезд в каком рейтинге выбрано
-if (stars.length > 0) {
-	for (let i = 0; i < stars.length; i++) {
-		stars[i].addEventListener('click', function (e) {
-			stars[i].classList.add('_active');
-			let d = Number(e.target.id);
-			starActiv[Math.floor(d)] = Math.round((Number(`${Math.floor(d)}.5`) - d) * 10);
-			for (let j = 1; j <= 5; j++) {
-				let newD = d + Number(`0.${j}`);
-				if (newD == `${Math.floor(newD)}.6`) break;
-				let elem = document.getElementById(newD.toFixed(1));
-				if (elem != null) {
-					elem.classList.add('_active');
-				}
-			};
-		});
-		stars[i].addEventListener('mouseover', function (e) {
-			stars[i].classList.remove('_active');
-			let d = Number(e.target.id);
-			for (let j = 1; j <= 5; j++) {
-				let newD = Number(`${Math.floor(d)}.${j}`);
-				document.getElementById(newD.toFixed(1)).classList.remove('_active');
-			};
-		});
-		stars[i].addEventListener('mouseout', function (e) {
-			let d = Number(e.target.id);
-			for (let j = 0; j <= starActiv[Math.floor(d)]; j++) {
-				let newD = Number(`${Math.floor(d)}.5`) - Number(`0.${j}`);
-				document.getElementById(newD).classList.add('_active');
-			}
-		});
-	};
-};
 //Прокрутка к началу строници
 const scrollToTop = document.querySelectorAll('.scroll-to-top');
 if (scrollToTop.length > 0) {
@@ -518,12 +519,129 @@ document.addEventListener('keydown', function (e) {
 	}
 });
 
+
+// Cтоимость закза в корзине
+//Стоимость попап заказа
+const arrowsMore = document.querySelectorAll('.form-cart-list__amount-more');
+const arrowsLess = document.querySelectorAll('.form-cart-list__amount-less');
+const arrowsInput = document.querySelectorAll('.form-cart-list__amount-input');
+const gramSelect = document.querySelector('.form-popup__gram-select');
+let finPrices = document.querySelectorAll('.cart-list__price span');
+let price; //В этой переменной будет стоимость заказа
+// if (gramSelect != null) {
+// 	priceFunc();
+// 	gramSelect.addEventListener('change', function () { //Событие при выборе опшинов
+// 		priceFunc();
+// 	})
+// }
+if (arrowsMore.length > 0 && arrowsLess.length > 0 && arrowsInput.length > 0) {
+	// Делаем кнопки кликабельными, устанавливаем макс и мин кол-во порций
+	arrowsMore.forEach(arrowMore => {
+		arrowMore.addEventListener('click', function () {
+			++(arrowMore.previousElementSibling.value);
+			if (arrowMore.previousElementSibling.value > 100) {
+				arrowMore.previousElementSibling.value = 100;
+			}
+			//priceFunc();	
+		})
+	});
+
+	arrowsLess.forEach(arrowLess => {
+		arrowLess.addEventListener('click', function () {
+			--(arrowLess.nextElementSibling.value);
+			if (arrowLess.nextElementSibling.value < 0) {
+				arrowLess.nextElementSibling.value = 0;
+			}
+			//priceFunc();
+		})
+	});
+	arrowsInput.forEach(arrowInput => {
+		arrowInput.addEventListener('keyup', function () {
+			if (arrowInput.value < 0) {
+				arrowInput.value = 0;
+			} else if (arrowInput.value > 100) {
+				arrowInput.value = 100;
+			}
+			//priceFunc();
+		})
+	});
+
+
+}
 //*< Функции>==========================================================================================
 //Закрывает меню бургер
 function menu_close() {
 	iconMenu.classList.remove("_active");
 	menuBody.classList.remove("_active");
 	bodyUnLock();
+}
+//Функция считает и выводит стоимость заказа
+// function priceFunc() {
+// 	//коллекция всех опшинов
+// 	const gramOptions = gramSelect.children;
+// 	for (let index = 0; index < gramOptions.length; index++) {
+// 		// перебираем опшины и находим выбранный
+// 		if (gramOptions[index].value == gramSelect.value) {
+// 			// у выбранного опшина берем значение data атрибута (в нем стоимость) и умножаем на кол-во
+// 			price = +(gramOptions[index].dataset.price) * +(arrowInput.value);
+// 			finPrice.innerHTML = price;
+// 		}
+// 	}
+// }
+// Добавляет/удаляет товары в корзину
+// При удалении в выхове функции надо 3 параметром указать false
+function updateCart(productButton, productId, productAdd = true) {
+	const cart = document.querySelector('.cart-header');
+	const cartIcon = cart.querySelector('.cart-header__icon');
+	const cartQuantity = cartIcon.querySelector('span');
+	const cartProduct = document.querySelector(`[data-cart-pid='${productId}']`);
+	const cartList = document.querySelector('.cart-list');
+	// Добавление товара
+	if (productAdd) {
+		// Если спан существует, мы увеличиваем его значение на единицу
+		if (cartQuantity) {
+			cartQuantity.innerHTML = ++cartQuantity.innerHTML;
+		} else { //Если спана нет, добавляем его со значением 1
+			cartIcon.insertAdjacentHTML('beforeend', `<span>1</span>`)
+		}
+		// Если в карзине нет товара, на котрый мы нажимаем, мы добавляем его, используя контент оригинального товара
+		if (!cartProduct) {
+			const product = document.querySelector(`[data-pid='${productId}']`);
+			const cartProductImage = product.querySelector('.item-product__image').innerHTML;
+			const cartProductTitle = product.querySelector('.item-product__title').innerHTML;
+			// Пишем HTML код внутренностей карточки товара
+			const cartProductContent = `
+		<a href="" class="cart-list__image _ibg">${cartProductImage}</a>
+		<div class="cart-list__body">
+			<a href="" class="cart-list__title">${cartProductTitle}</a>
+			<div class="cart-list__quantity">Quantity: <span>1</span></div>
+			<a href="" class="cart-list__delete">Delete</a>
+		</div>`;
+			// Добавляем в конец списка пункт, внутри которого предыдущий HTML код
+			cartList.insertAdjacentHTML('beforeend', `<li data-cart-pid='${productId}' class='cart-list__item'>${cartProductContent}</li>`);
+			_ibg();
+		} else {
+			// Если в корзине уже есть добавляемый товар, тогда увеличиваем значение в спане
+			const cartProductQuantity = cartProduct.querySelector('.cart-list__quantity span')
+			cartProductQuantity.innerHTML = ++cartProductQuantity.innerHTML;
+		}
+		// После всех действий отбираем класс холд у кнопки добавления в корзину, чтобы можно было еще добавить этот в корзину
+		productButton.classList.remove('_hold');
+	} else {
+		const cartProductQuantity = cartProduct.querySelector('.cart-list__quantity span');
+		cartProductQuantity.innerHTML = --cartProductQuantity.innerHTML;
+		if (!parseInt(cartProductQuantity.innerHTML)) {
+			cartProduct.remove();
+		}
+		const cartQuantityValue = --cartQuantity.innerHTML;
+
+		if (cartQuantityValue) {
+			cartQuantity.innerHTML = cartQuantityValue;
+		} else {
+			cartQuantity.remove();
+			cart.classList.remove('_active');
+		}
+	}
 }
 // Убирает переданный класс у переданного элемента
 function _removeClasses(el, class_name) {
