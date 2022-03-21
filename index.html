@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="format-detection" content="telephone=no">
+	<!-- Подключени слайдера swiper -->
+	<!-- <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" /> -->
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="shortcut icon" href="img/favicon/favicon.ico">
+	<!-- <meta name="robots" content="noindex, nofollow"> -->
+	<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Marshall</title>
+</head>
+
+<body>
+	<div class="wrapper">
+		<header class="header lock-padding">
+			<div class="header__wrapper">
+				<div class="header__container _container">
+					<div class="header__body">
+						<div class="header__logo _icon-logo"></div>
+						<nav class="header__menu menu">
+							<div class="menu__body">
+								<ul class="menu__list">
+									<li class="menu__item">
+										<a href="" class="menu__link">headphones</a>
+									</li>
+									<li class="menu__item">
+										<a href="" class="menu__link">speakers</a>
+									</li>
+									<li class="menu__item">
+										<a href="" class="menu__link">accessories</a>
+									</li>
+									<li class="menu__item">
+										<a href="" class="menu__link">amps</a>
+									</li>
+									<li class="menu__item">
+										<a href="" class="menu__link">marshall records</a>
+									</li>
+									<li class="menu__item">
+										<a href="" class="menu__link">history</a>
+									</li>
+								</ul>
+								<div class="menu__social social-menu">
+									<div class="social-menu__facebook _icon-facebook"></div>
+									<div class="social-menu__instagram _icon-insta"></div>
+									<div class="social-menu__twitter _icon-twitter"></div>
+									<div class="social-menu__spotify _icon-spotify"></div>
+								</div>
+							</div>
+						</nav>
+						<div class="header__actions actions-header">
+							<div class="actions-header__search">
+								<div class="search-form">
+									<form action="#" class="search-form__item">
+										<button type="button" class="search-form__btn _icon-search"></button>
+										<input autocomplete=" off" type="text" name="form[]" class="search-form__input">
+									</form>
+								</div>
+							</div>
+							<div class="actions-header__cart cart-header">
+								<a href="" class="cart-header__icon _icon-cart"></a>
+								<div class="cart-header__body">
+									<ul class="cart-header__list cart-list"></ul>
+								</div>
+							</div>
+						</div>
+						<div class="icon-menu">
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<main class="page">
+		</main>
+		<footer class="footer">
+			<div class="footer__container _container">
+
+			</div>
+		</footer>
+	</div>
+	<!-- спойлер -->
+	<!-- <div class="questions__question question">
+		<h3 class="question__title">Вопрос один</h3>
+		<div class="question__icon icon-question">
+			<span></span>
+			<span></span>
+		</div>
+		<p class="question__text"></p>
+	</div>
+	<div class="questions__question question">
+		<h3 class="question__title">Вопрос два</h3>
+		<div class="question__icon icon-question">
+			<span></span>
+			<span></span>
+		</div>
+		<p class="question__text"></p>
+	</div> -->
+	<!-- попап -->
+	<!-- <div id="popup" class="popup">
+		<div class="popup__body">
+			<div class="popup__content">
+				<a href="#" class="popup__close"></a>
+				<div class="popup__text">
+					Заявка принята, мы свяжемся с вами в ближайшее время!
+				</div>
+			</div>
+		</div>
+	</div> -->
+	<!-- слайдер swiper, Эти классы добавляются к основным классам болока -->
+	<!-- <div class="swiper">
+		<div class="swiper-wrapper">
+			<div class="swiper-slide">
+				Слайд 1
+			</div>
+			<div class="swiper-slide">
+				Слайд 2
+			</div>
+		</div>
+		<div class="swiper-pagination"></div>
+	</div> -->
+	<!-- Подключение скрипта слайдера swiper -->
+	<!-- <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script> -->
+	<script src="js/script.js"></script>
+	<!-- Динамический адаптив, нужен для того, чтобы перемещать элемент куда угодно в коде с помощью data-da=".main-slider__body,991.98,2" (куда(блок, в котором будет находиться элемент) , когда, какой(отсчет с нуля)) -->
+	<script src="js/dynamic-adapt.js"></script>
+</body>
+
+</html>
+<!-- 
+\\анимация
+_anim-no-hide - этот класс для того, чтобы не запускать анимацию повторно и не убирать класс _active
+_anim-items - этот класс добавляется к анимируемым объектам
+Ну и класс с написанной в css анимацией
+
+\\Прокрутка
+scroll-to-top - класс добавляется к кнопке, нажав на которую, прокрутит в начало
+<block>_scroll - класс добавляется к кнопке, нажав на которую, прокрутит к <block> (вместо <block> подставить название блока).Лучше не делать кнопку ссылкой
+
+\\рейтинг звезд
+star-rating - класс добавляется каждой звезде
+
+\\поп-апы
+_popup-link - этот класс добавляется ко всем кнопкам, на которых открывается поп-ап
+lock-padding - Этот класс добавляется к фиксированным объектам, например к шапке
+popup__close - этот класс добавляется для крестика, по которому поп-ап закрывается
+
+\\спойлеры фрилансера
+Для родителя слойлеров пишем атрибут data-spollers
+Для заголовков слойлеров пишем атрибут data-spoller
+Если нужно включать\выключать работу спойлеров на разных размерах экранов
+пишем параметры ширины и типа брейкпоинта.
+Например: 
+data-spollers="992,max" - спойлеры будут работать только на экранах меньше или равно 992px
+data-spollers="768,min" - спойлеры будут работать только на экранах больше или равно 768px
+
+Если нужно что бы в блоке открывался болько один слойлер добавляем атрибут data-one-spoller к родителю
+-->
