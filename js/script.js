@@ -130,7 +130,7 @@ if (menuItems.length > 0 && !isMobile.any()) {
 	});
 }
 //перемещение лейбла у тегов форм
-const formText = document.querySelector('.form-contacts__text'); //Блок, внутри котрого инпут и лэйбл, надо прописать стил при получении класса _active (типо лейбл уменьшаеьтся и перемещается выше)
+const formText = document.querySelector('.form-newsletter__mail'); //Блок, внутри котрого инпут и лэйбл, надо прописать стил при получении класса _active (типо лейбл уменьшаеьтся и перемещается выше)
 if (formText != null) {
 	addAnEvent(formText);
 }
@@ -568,6 +568,7 @@ function offset(el) { //в скобках объект, чье местопол�
 	return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
 }
 //Блокирует прокрутку
+const lockPadding = document.querySelectorAll('.lock-padding');
 function bodyLock() {
 	const lockPaddingValue = window.innerWidth - document.querySelector('.wrapper').offsetWidth + 'px';
 	if (lockPadding.length > 0) {
@@ -585,7 +586,6 @@ function bodyLock() {
 	}, 500); //Время, в течении которого нельзя повторно открыть поп-ап, обычно равен времени анимации
 }
 //Разблокировывает прокрутку
-const lockPadding = document.querySelectorAll('.lock-padding');
 function bodyUnLock() {
 	setTimeout(function () {
 		if (lockPadding.length > 0) {

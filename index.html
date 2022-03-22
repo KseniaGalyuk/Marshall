@@ -16,8 +16,8 @@
 
 <body>
 	<div class="wrapper">
-		<header class="header lock-padding">
-			<div class="header__wrapper">
+		<header class="header">
+			<div class="header__wrapper lock-padding">
 				<div class="header__container _container">
 					<div class="header__body">
 						<div class="header__logo _icon-logo"></div>
@@ -45,10 +45,10 @@
 										</li>
 									</ul>
 									<div class="menu__social social-menu">
-										<div class="social-menu__facebook _icon-facebook"></div>
-										<div class="social-menu__instagram _icon-insta"></div>
-										<div class="social-menu__twitter _icon-twitter"></div>
-										<div class="social-menu__spotify _icon-spotify"></div>
+										<a href="" class="social-menu__facebook _icon-facebook"></a>
+										<a href="" class="social-menu__instagram _icon-insta"></a>
+										<a href="" class="social-menu__twitter _icon-twitter"></a>
+										<a href="" class="social-menu__spotify _icon-spotify"></a>
 									</div>
 								</div>
 							</div>
@@ -172,10 +172,109 @@
 			</div>
 		</header>
 		<main class="page">
+			<section class="page__products products-main">
+				<div class="products-main__container _container">
+					<div class="products-main__body">
+						<a href="" class="products-main__item item-products-main">
+							<div class="item-products-main__image _ibg">
+								<img src="img/products-main/headphones.png" alt="">
+							</div>
+							<h3 class="item-products-main__title">headphones</h3>
+							<p class="item-products-main__more">show more</p>
+						</a>
+						<a href="" class="products-main__item item-products-main">
+							<div class="item-products-main__image _ibg">
+								<img src="img/products-main/speakers.png" alt="">
+							</div>
+							<h3 class="item-products-main__title">speakers</h3>
+							<p class="item-products-main__more">show more</p>
+						</a>
+						<a href="" class="products-main__item item-products-main">
+							<div class="item-products-main__image _ibg">
+								<img src="img/products-main/accessories.png" alt="">
+							</div>
+							<h3 class="item-products-main__title">accessories</h3>
+							<p class="item-products-main__more">show more</p>
+						</a>
+						<a href="" class="products-main__item item-products-main">
+							<div class="item-products-main__image _ibg">
+								<img src="img/products-main/amps.png" alt="">
+							</div>
+							<h3 class="item-products-main__title">amps</h3>
+							<p class="item-products-main__more">show more</p>
+						</a>
+					</div>
+				</div>
+			</section>
+			<section class="page__newsletter newsletter">
+				<div class="newsletter__container _container">
+					<div class="newsletter__body">
+						<div class="newsletter__content">
+							<h2 class="newsletter__title">SIGN UP FOR OUR NEWSLETTER</h2>
+							<p class="newsletter__text">Get 10 % off on your first order</p>
+							<form action="#" class="newsletter__form form-newsletter" autocomplete="off">
+								<div class="form-newsletter__mail">
+									<input type="text" id="userMail" name="usermail" class="form-newsletter__mail-input">
+									<label for="userMail">your email</label>
+								</div>
+								<button type="submit" class="form-newsletter__button">subscribe</button>
+							</form>
+							<p class="newsletter__privacy">by subscribing you accept our <a href="">privacy policy</a></p>
+						</div>
+
+					</div>
+					<div class="newsletter__image _ibg"><img src="img/newsletter/1.png" alt=""></div>
+				</div>
+			</section>
 		</main>
 		<footer class="footer">
 			<div class="footer__container _container">
+				<div class="footer__body">
+					<div class="footer__info">
+						<div class="footer__logo _icon-logo"></div>
+						<div class="footer__text">©2020 zound industries. <br>
+							all rights reserved. org. nr 5567574610</div>
+					</div>
+					<nav class="footer__menu menu-footer">
+						<ul class="menu-footer__list">
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">headphones</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">speakers</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">accessories</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">amps</a>
+							</li>
+						</ul>
+						<ul class="menu-footer__list">
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">marshall records</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">history</a>
+							</li>
+						</ul>
 
+					</nav>
+					<div class="footer__social social-footer">
+						<a href="" class="social-footer__facebook _icon-facebook">
+							<p>facebook</p>
+						</a>
+						<a href="" class="social-footer__instagram _icon-insta">
+							<p>instagram</p>
+						</a>
+						<a href="" class="social-footer__twitter _icon-twitter">
+							<p>twitter</p>
+						</a>
+						<a href="" class="social-footer__spotify _icon-spotify">
+							<p>spotify</p>
+						</a>
+					</div>
+				</div>
 			</div>
 		</footer>
 	</div>
