@@ -15,29 +15,6 @@ window.onload = function () {
 		} else if (!targetElement.closest('.search-form') && document.querySelectorAll(".search-form._active")) {
 			document.querySelector(".search-form").classList.remove("_active");
 		}
-		// Открытие корзины по нажатию на нее
-		if (targetElement.classList.contains('cart-header__icon') || targetElement.closest('.cart-header__icon')) {
-			if (document.querySelector('.cart-list').children.length > 0) {
-				document.querySelector('.cart-header__empty').style.display = "none";
-				document.querySelector('.cart-header__total').style.display = "block";
-				document.querySelector('.cart-header__button').style.display = "flex";
-			} else {
-				document.querySelector('.cart-header__empty').style.display = "block";
-				document.querySelector('.cart-header__total').style.display = "none";
-				document.querySelector('.cart-header__button').style.display = "none";
-			}
-			document.querySelector('.cart-header').classList.toggle("_active");
-			e.preventDefault();
-			// Закрываем при нажатии на любое другое место, кроме кнопки добавления в корзину
-		} else if (!targetElement.closest('.cart-header__content') || targetElement.closest('.cart-header__close')) {
-			document.querySelector('.cart-header').classList.remove("_active")
-		}
-		// Удаление товара из корзины
-		if (targetElement.classList.contains('cart-list__delete')) {
-			const productId = targetElement.closest('.cart-list__item').dataset.cartPid;
-			updateCart(targetElement, productId, false);
-			e.preventDefault();
-		}
 	}
 }
 
@@ -171,26 +148,39 @@ const callback = function (entries, observer) {
 const headerObserver = new IntersectionObserver(callback);
 headerObserver.observe(headerElement);
 
-//Меню бургер
+//Меню бургер, корзина
 const iconMenu = document.querySelector('.icon-menu');
 const menuBody = document.querySelector('.menu__body');
 const headerBody = document.querySelector('.header__body');
+const cartHeader = document.querySelector('.cart-header');
 if (iconMenu != null) {
 	document.addEventListener('click', function (e) {
 		if (e.target.closest('.icon-menu')) {
 			iconMenu.classList.toggle('_active');
 			menuBody.classList.toggle('_active');
 			headerBody.classList.toggle('_active');
-			bodyLock();
-			if (!menuBody.classList.contains('_active')) {
-				bodyUnLock();
-			}
 		}
-		if (!e.target.closest('.icon-menu') && !e.target.closest('._popup-link') && !e.target.closest('.popup__content')) {
+		if (!e.target.closest('.icon-menu')) {
 			iconMenu.classList.remove('_active');
 			menuBody.classList.remove('_active');
 			headerBody.classList.remove('_active');
+		}
+		// Открытие корзины по нажатию на иконку
+		if (e.target.classList.contains('cart-header__icon')) {
+			cartHeader.classList.toggle("_active");
+			document.querySelector('.search-form__btn').classList.toggle("_active");
+			document.querySelector('.header__logo').classList.toggle("_active");
+			e.preventDefault();
+		}
+		if ((!e.target.closest('.cart-header__content') && !e.target.classList.contains('cart-header__icon')) || e.target.closest('.cart-header__close')) {
+			cartHeader.classList.remove("_active");
+			document.querySelector('.search-form__btn').classList.remove("_active");
+			document.querySelector('.header__logo').classList.remove("_active");
+		}
+		if (!menuBody.classList.contains('_active') && !cartHeader.classList.contains('_active')) {
 			bodyUnLock();
+		} else if (menuBody.classList.contains('_active') || cartHeader.classList.contains('_active')) {
+			bodyLock();
 		}
 	});
 };
@@ -434,13 +424,6 @@ if (spollersArray.length > 0) {
 		}
 	}
 }
-//Прокрутка к началу строници
-const scrollToTop = document.querySelectorAll('.scroll-to-top');
-if (scrollToTop.length > 0) {
-	for (let index = 0; index < questionsX.length; index++) {
-		scrollToTop[index].addEventListener('click', scrollTop());
-	}
-}
 //прокрутка к блоку
 const questions = document.querySelector('.questions');
 const questionsX = document.querySelectorAll('.questions_scroll');
@@ -478,62 +461,15 @@ if (animItems.length > 0) {
 		animOnScroll();
 	}, 300);
 }
-//Popups
-//у попапа должен быть id с его названием, а у кнопки, по которой он открывается href='#{название поп-апа}'
-let popupLink = document.querySelectorAll('._popup-link'); //этот класс добавляется ко всем кнопкам, на которых открывается поп-ап
-const lockPadding = document.querySelectorAll('.lock-padding'); //Этот класс добавляется к фиксированным объектам, например к шапке
-if (popupLink.length > 0) {
-	for (let index = 0; index < popupLink.length; index++) {
-		const el = popupLink[index];
-		el.addEventListener('click', function (e) {
-			let popupName = el.getAttribute('href').replace('#', '');
-			let curentPopup = document.getElementById(popupName);
-			popupOpen(curentPopup);
-			e.preventDefault();
-		})
-	}
-}
-let popupCloseIcon = document.querySelectorAll('.popup__close');//этот класс добавляется для крестика, по которому поп-ап закрывается
-if (popupCloseIcon.length > 0) {
-	for (let index = 0; index < popupCloseIcon.length; index++) {
-		const el = popupCloseIcon[index];
-		el.addEventListener('click', function (e) {
-			e.stopPropagation();
-			if (menuBody.classList.contains('_active')) {
-				popupClose(el.closest('.popup'), false);
-			} else {
-				popupClose(el.closest('.popup'));
-			}
-			e.preventDefault();
-		})
-	}
-}
-document.addEventListener('keydown', function (e) {
-	if (e.code === 'Escape') {
-		const popup_active = document.querySelector('.popup._active');
-		if (menuBody.classList.contains('_active')) {
-			popupClose(popup_active, false);
-		} else {
-			popupClose(popup_active);
-		}
-	}
-});
-
 
 // Cтоимость закза в корзине
-//Стоимость попап заказа
 const arrowsMore = document.querySelectorAll('.form-cart-list__amount-more');
 const arrowsLess = document.querySelectorAll('.form-cart-list__amount-less');
 const arrowsInput = document.querySelectorAll('.form-cart-list__amount-input');
-const gramSelect = document.querySelector('.form-popup__gram-select');
-let finPrices = document.querySelectorAll('.cart-list__price span');
-let price; //В этой переменной будет стоимость заказа
-// if (gramSelect != null) {
-// 	priceFunc();
-// 	gramSelect.addEventListener('change', function () { //Событие при выборе опшинов
-// 		priceFunc();
-// 	})
-// }
+const cartListItems = document.querySelectorAll('.cart-list__item');
+if (cartListItems.length > 0) {
+	priceFunc();
+}
 if (arrowsMore.length > 0 && arrowsLess.length > 0 && arrowsInput.length > 0) {
 	// Делаем кнопки кликабельными, устанавливаем макс и мин кол-во порций
 	arrowsMore.forEach(arrowMore => {
@@ -542,17 +478,16 @@ if (arrowsMore.length > 0 && arrowsLess.length > 0 && arrowsInput.length > 0) {
 			if (arrowMore.previousElementSibling.value > 100) {
 				arrowMore.previousElementSibling.value = 100;
 			}
-			//priceFunc();	
+			priceFunc();
 		})
 	});
-
 	arrowsLess.forEach(arrowLess => {
 		arrowLess.addEventListener('click', function () {
 			--(arrowLess.nextElementSibling.value);
 			if (arrowLess.nextElementSibling.value < 0) {
 				arrowLess.nextElementSibling.value = 0;
 			}
-			//priceFunc();
+			priceFunc();
 		})
 	});
 	arrowsInput.forEach(arrowInput => {
@@ -562,87 +497,45 @@ if (arrowsMore.length > 0 && arrowsLess.length > 0 && arrowsInput.length > 0) {
 			} else if (arrowInput.value > 100) {
 				arrowInput.value = 100;
 			}
-			//priceFunc();
+			priceFunc();
 		})
 	});
-
-
 }
 //*< Функции>==========================================================================================
-//Закрывает меню бургер
-function menu_close() {
-	iconMenu.classList.remove("_active");
-	menuBody.classList.remove("_active");
-	bodyUnLock();
-}
 //Функция считает и выводит стоимость заказа
-// function priceFunc() {
-// 	//коллекция всех опшинов
-// 	const gramOptions = gramSelect.children;
-// 	for (let index = 0; index < gramOptions.length; index++) {
-// 		// перебираем опшины и находим выбранный
-// 		if (gramOptions[index].value == gramSelect.value) {
-// 			// у выбранного опшина берем значение data атрибута (в нем стоимость) и умножаем на кол-во
-// 			price = +(gramOptions[index].dataset.price) * +(arrowInput.value);
-// 			finPrice.innerHTML = price;
-// 		}
-// 	}
-// }
-// Добавляет/удаляет товары в корзину
-// При удалении в выхове функции надо 3 параметром указать false
-function updateCart(productButton, productId, productAdd = true) {
-	const cart = document.querySelector('.cart-header');
-	const cartIcon = cart.querySelector('.cart-header__icon');
-	const cartQuantity = cartIcon.querySelector('span');
-	const cartProduct = document.querySelector(`[data-cart-pid='${productId}']`);
-	const cartList = document.querySelector('.cart-list');
-	// Добавление товара
-	if (productAdd) {
-		// Если спан существует, мы увеличиваем его значение на единицу
-		if (cartQuantity) {
-			cartQuantity.innerHTML = ++cartQuantity.innerHTML;
-		} else { //Если спана нет, добавляем его со значением 1
-			cartIcon.insertAdjacentHTML('beforeend', `<span>1</span>`)
-		}
-		// Если в карзине нет товара, на котрый мы нажимаем, мы добавляем его, используя контент оригинального товара
-		if (!cartProduct) {
-			const product = document.querySelector(`[data-pid='${productId}']`);
-			const cartProductImage = product.querySelector('.item-product__image').innerHTML;
-			const cartProductTitle = product.querySelector('.item-product__title').innerHTML;
-			// Пишем HTML код внутренностей карточки товара
-			const cartProductContent = `
-		<a href="" class="cart-list__image _ibg">${cartProductImage}</a>
-		<div class="cart-list__body">
-			<a href="" class="cart-list__title">${cartProductTitle}</a>
-			<div class="cart-list__quantity">Quantity: <span>1</span></div>
-			<a href="" class="cart-list__delete">Delete</a>
-		</div>`;
-			// Добавляем в конец списка пункт, внутри которого предыдущий HTML код
-			cartList.insertAdjacentHTML('beforeend', `<li data-cart-pid='${productId}' class='cart-list__item'>${cartProductContent}</li>`);
-			_ibg();
-		} else {
-			// Если в корзине уже есть добавляемый товар, тогда увеличиваем значение в спане
-			const cartProductQuantity = cartProduct.querySelector('.cart-list__quantity span')
-			cartProductQuantity.innerHTML = ++cartProductQuantity.innerHTML;
-		}
-		// После всех действий отбираем класс холд у кнопки добавления в корзину, чтобы можно было еще добавить этот в корзину
-		productButton.classList.remove('_hold');
-	} else {
-		const cartProductQuantity = cartProduct.querySelector('.cart-list__quantity span');
-		cartProductQuantity.innerHTML = --cartProductQuantity.innerHTML;
-		if (!parseInt(cartProductQuantity.innerHTML)) {
-			cartProduct.remove();
-		}
-		const cartQuantityValue = --cartQuantity.innerHTML;
-
-		if (cartQuantityValue) {
-			cartQuantity.innerHTML = cartQuantityValue;
-		} else {
-			cartQuantity.remove();
-			cart.classList.remove('_active');
-		}
+function priceFunc() {
+	let finPrice = document.querySelector('.cart-header__total .cart-header__price');
+	let cartsListPrice = document.querySelectorAll('.cart-list__price span');
+	let priceItem = 0;
+	let priceTotal = 0;
+	for (let i = 0; i < cartListItems.length; i++) {
+		priceItem = +(cartListItems[i].dataset.price) * +(arrowsInput[i].value);
+		cartsListPrice[i].innerHTML = priceItem.toFixed(2);
+		priceTotal = priceTotal + priceItem;
+		finPrice.innerHTML = priceTotal.toFixed(2);
 	}
 }
+//Прокрутка до блока при нажатии на кнопку
+//Пример применения
+// const questionsX = document.querySelector('.questions_scroll');
+// const questions = document.querySelector('.questions');
+// if (questionsX != null) {
+// 	questionsX.addEventListener('click', () => scrollToBlock(questions));
+// };
+// if (rationsX.length > 0) {
+// 	for (let index = 0; index < rationsX.length; index++) {
+// 		rationsX[index].addEventListener('click', () => scrollToBlock(rations));
+// 	}
+// };
+function scrollToBlock(block) { //в скобки передаем блок, до которого надо докрутить
+	let getTop = block.getBoundingClientRect().top;
+	let getTopDocument = getTop + window.scrollY;
+	window.scrollTo({
+		top: getTopDocument,
+		left: 0,
+		behavior: "smooth",
+	});
+};
 // Убирает переданный класс у переданного элемента
 function _removeClasses(el, class_name) {
 	for (var i = 0; i < el.length; i++) {
@@ -667,61 +560,12 @@ function formRemoveClass(elem) {
 		elem.classList.remove('_active');
 	}
 }
-//Прокрутка к началу строници
-function scrollTop(e) {
-	e.preventDefault();
-	window.scrollTo({
-		top: 0,
-		left: 0,
-		behavior: "smooth",
-	});
-};
-function scrollToBlock(block) { //в скобки передаем блок, до которого надо докрутить
-	let getTop = block.getBoundingClientRect().top;
-	let getTopDocument = getTop + window.scrollY;
-	window.scrollTo({
-		top: getTopDocument,
-		left: 0,
-		behavior: "smooth",
-	});
-};
-//эта функция точно узнает местоположение объекта.Можно получить значение сверху и слева
+//узнает местоположение объекта.Можно получить значение сверху и слева
 function offset(el) { //в скобках объект, чье местоположение нужно
 	const rect = el.getBoundingClientRect(),
 		scrollLeft = window.scrollX || document.documentElement.scrollLeft,
 		scrollTop = window.scrollY || document.documentElement.scrollTop;
 	return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
-}
-//Открывает поп-ап
-function popupOpen(curentPopup) { //В скобках попап, который надо открыть (найти его можно по айди)
-	if (curentPopup && unlock) {
-		let _activePopup = document.querySelector('.popup._active');
-		if (_activePopup) {
-			popupClose(_activePopup, false);
-		} else {
-			bodyLock();
-		}
-		curentPopup.classList.add('_active');
-		curentPopup.addEventListener("click", function (e) {
-			if (!e.target.closest('.popup__content')) {
-				e.stopPropagation();
-				if (menuBody.classList.contains('_active')) {
-					popupClose(e.target.closest('.popup'), false);
-				} else {
-					popupClose(e.target.closest('.popup'));
-				}
-			}
-		});
-	}
-}
-//Закрывает поп-ап
-function popupClose(item, doUnlock = true) { //в скобках поп-ап, который надо закрыть и надо ли разблокировать прокрутку
-	if (unlock) {
-		item.classList.remove('_active');
-		if (doUnlock) {
-			bodyUnLock();
-		}
-	}
 }
 //Блокирует прокрутку
 function bodyLock() {
@@ -741,6 +585,7 @@ function bodyLock() {
 	}, 500); //Время, в течении которого нельзя повторно открыть поп-ап, обычно равен времени анимации
 }
 //Разблокировывает прокрутку
+const lockPadding = document.querySelectorAll('.lock-padding');
 function bodyUnLock() {
 	setTimeout(function () {
 		if (lockPadding.length > 0) {
@@ -771,532 +616,3 @@ _ibg();
 //*</ Функции>==========================================================================================
 // Скрипты для форм
 //let btn = document.querySelectorAll('button[type="submit"],input[type="submit"]');
-let forms = document.querySelectorAll('form');
-if (forms.length > 0) {
-	for (let index = 0; index < forms.length; index++) {
-		const el = forms[index];
-		el.addEventListener('submit', form_submit);
-	}
-}
-async function form_submit(e) {
-	let btn = e.target;
-	let form = btn.closest('form');
-	let error = form_validate(form);
-	if (error == 0) {
-		let formAction = form.getAttribute('action') ? form.getAttribute('action').trim() : '#';
-		let formMethod = form.getAttribute('method') ? form.getAttribute('method').trim() : 'GET';
-		const message = form.getAttribute('data-message');
-		const ajax = form.getAttribute('data-ajax');
-
-		//SendForm
-		if (ajax) {
-			e.preventDefault();
-			let formData = new FormData(form);
-			form.classList.add('_sending');
-			let response = await fetch(formAction, {
-				method: formMethod,
-				body: formData
-			});
-			if (response.ok) {
-				let result = await response.json();
-				form.classList.remove('_sending');
-				if (message) {
-					popup_open(message + '-message');
-				}
-				form_clean(form);
-			} else {
-				alert("Ошибка");
-				form.classList.remove('_sending');
-			}
-		}
-		// If test
-		if (form.hasAttribute('data-test')) {
-			e.preventDefault();
-			if (message) {
-				popup_open(message + '-message');
-			}
-			form_clean(form);
-		}
-	} else {
-		let form_error = form.querySelectorAll('._error');
-		if (form_error && form.classList.contains('_goto-error')) {
-			_goto(form_error[0], 1000, 50);
-		}
-		e.preventDefault();
-	}
-}
-function form_validate(form) {
-	let error = 0;
-	let form_req = form.querySelectorAll('._req');
-	if (form_req.length > 0) {
-		for (let index = 0; index < form_req.length; index++) {
-			const el = form_req[index];
-			if (!_is_hidden(el)) {
-				error += form_validate_input(el);
-			}
-		}
-	}
-	return error;
-}
-function form_validate_input(input) {
-	let error = 0;
-	let input_g_value = input.getAttribute('data-value');
-
-	if (input.getAttribute("name") == "email" || input.classList.contains("_email")) {
-		if (input.value != input_g_value) {
-			let em = input.value.replace(" ", "");
-			input.value = em;
-		}
-		if (email_test(input) || input.value == input_g_value) {
-			form_add_error(input);
-			error++;
-		} else {
-			form_remove_error(input);
-		}
-	} else if (input.getAttribute("type") == "checkbox" && input.checked == false) {
-		form_add_error(input);
-		error++;
-	} else {
-		if (input.value == '' || input.value == input_g_value) {
-			form_add_error(input);
-			error++;
-		} else {
-			form_remove_error(input);
-		}
-	}
-	return error;
-}
-function form_add_error(input) {
-	input.classList.add('_error');
-	input.parentElement.classList.add('_error');
-
-	let input_error = input.parentElement.querySelector('.form__error');
-	if (input_error) {
-		input.parentElement.removeChild(input_error);
-	}
-	let input_error_text = input.getAttribute('data-error');
-	if (input_error_text && input_error_text != '') {
-		input.parentElement.insertAdjacentHTML('beforeend', '<div class="form__error">' + input_error_text + '</div>');
-	}
-}
-function form_remove_error(input) {
-	input.classList.remove('_error');
-	input.parentElement.classList.remove('_error');
-
-	let input_error = input.parentElement.querySelector('.form__error');
-	if (input_error) {
-		input.parentElement.removeChild(input_error);
-	}
-}
-function form_clean(form) {
-	let inputs = form.querySelectorAll('input,textarea');
-	for (let index = 0; index < inputs.length; index++) {
-		const el = inputs[index];
-		el.parentElement.classList.remove('_focus');
-		el.classList.remove('_focus');
-		el.value = el.getAttribute('data-value');
-	}
-	let checkboxes = form.querySelectorAll('.checkbox__input');
-	if (checkboxes.length > 0) {
-		for (let index = 0; index < checkboxes.length; index++) {
-			const checkbox = checkboxes[index];
-			checkbox.checked = false;
-		}
-	}
-	let selects = form.querySelectorAll('select');
-	if (selects.length > 0) {
-		for (let index = 0; index < selects.length; index++) {
-			const select = selects[index];
-			const select_default_value = select.getAttribute('data-default');
-			select.value = select_default_value;
-			select_item(select);
-		}
-	}
-}
-
-//viewPass
-let viewPass = document.querySelectorAll('._viewpass');
-for (let index = 0; index < viewPass.length; index++) {
-	const element = viewPass[index];
-	element.addEventListener("click", function (e) {
-		if (element.classList.contains('_active')) {
-			element.parentElement.querySelector('input').setAttribute("type", "password");
-		} else {
-			element.parentElement.querySelector('input').setAttribute("type", "text");
-		}
-		element.classList.toggle('_active');
-	});
-}
-
-//Select
-let selects = document.getElementsByTagName('select');
-if (selects.length > 0) {
-	selects_init();
-}
-function selects_init() {
-	for (let index = 0; index < selects.length; index++) {
-		const select = selects[index];
-		select_init(select);
-	}
-	//select_callback();
-	document.addEventListener('click', function (e) {
-		selects_close(e);
-	});
-	document.addEventListener('keydown', function (e) {
-		if (e.code === 'Escape') {
-			selects_close(e);
-		}
-	});
-}
-function selects_close(e) {
-	const selects = document.querySelectorAll('.select');
-	if (!e.target.closest('.select') && !e.target.classList.contains('_option')) {
-		for (let index = 0; index < selects.length; index++) {
-			const select = selects[index];
-			const select_body_options = select.querySelector('.select__options');
-			select.classList.remove('_active');
-			_slideUp(select_body_options, 100);
-		}
-	}
-}
-function select_init(select) {
-	const select_parent = select.parentElement;
-	const select_modifikator = select.getAttribute('class');
-	const select_selected_option = select.querySelector('option:checked');
-	select.setAttribute('data-default', select_selected_option.value);
-	select.style.display = 'none';
-
-	select_parent.insertAdjacentHTML('beforeend', '<div class="select select_' + select_modifikator + '"></div>');
-
-	let new_select = select.parentElement.querySelector('.select');
-	new_select.appendChild(select);
-	select_item(select);
-}
-function select_item(select) {
-	const select_parent = select.parentElement;
-	const select_items = select_parent.querySelector('.select__item');
-	const select_options = select.querySelectorAll('option');
-	const select_selected_option = select.querySelector('option:checked');
-	const select_selected_text = select_selected_option.text;
-	const select_type = select.getAttribute('data-type');
-
-	if (select_items) {
-		select_items.remove();
-	}
-
-	let select_type_content = '';
-	if (select_type == 'input') {
-		select_type_content = '<div class="select__value icon-select-arrow"><input autocomplete="off" type="text" name="form[]" value="' + select_selected_text + '" data-error="Ошибка" data-value="' + select_selected_text + '" class="select__input"></div>';
-	} else {
-		select_type_content = '<div class="select__value icon-select-arrow"><span>' + select_selected_text + '</span></div>';
-	}
-
-	select_parent.insertAdjacentHTML('beforeend',
-		'<div class="select__item">' +
-		'<div class="select__title">' + select_type_content + '</div>' +
-		'<div hidden class="select__options">' + select_get_options(select_options) + '</div>' +
-		'</div></div>');
-
-	select_actions(select, select_parent);
-}
-function select_actions(original, select) {
-	const select_item = select.querySelector('.select__item');
-	const selectTitle = select.querySelector('.select__title');
-	const select_body_options = select.querySelector('.select__options');
-	const select_options = select.querySelectorAll('.select__option');
-	const select_type = original.getAttribute('data-type');
-	const select_input = select.querySelector('.select__input');
-
-	selectTitle.addEventListener('click', function (e) {
-		selectItemActions();
-	});
-
-	function selectMultiItems() {
-		let selectedOptions = select.querySelectorAll('.select__option');
-		let originalOptions = original.querySelectorAll('option');
-		let selectedOptionsText = [];
-		for (let index = 0; index < selectedOptions.length; index++) {
-			const selectedOption = selectedOptions[index];
-			originalOptions[index].removeAttribute('selected');
-			if (selectedOption.classList.contains('_selected')) {
-				const selectOptionText = selectedOption.innerHTML;
-				selectedOptionsText.push(selectOptionText);
-				originalOptions[index].setAttribute('selected', 'selected');
-			}
-		}
-		select.querySelector('.select__value').innerHTML = '<span>' + selectedOptionsText + '</span>';
-	}
-	function selectItemActions(type) {
-		if (!type) {
-			let selects = document.querySelectorAll('.select');
-			for (let index = 0; index < selects.length; index++) {
-				const select = selects[index];
-				const select_body_options = select.querySelector('.select__options');
-				if (select != select_item.closest('.select')) {
-					select.classList.remove('_active');
-					_slideUp(select_body_options, 100);
-				}
-			}
-			_slideToggle(select_body_options, 100);
-			select.classList.toggle('_active');
-		}
-	}
-	for (let index = 0; index < select_options.length; index++) {
-		const select_option = select_options[index];
-		const select_option_value = select_option.getAttribute('data-value');
-		const select_option_text = select_option.innerHTML;
-
-		if (select_type == 'input') {
-			select_input.addEventListener('keyup', select_search);
-		} else {
-			if (select_option.getAttribute('data-value') == original.value && !original.hasAttribute('multiple')) {
-				select_option.style.display = 'none';
-			}
-		}
-		select_option.addEventListener('click', function () {
-			for (let index = 0; index < select_options.length; index++) {
-				const el = select_options[index];
-				el.style.display = 'block';
-			}
-			if (select_type == 'input') {
-				select_input.value = select_option_text;
-				original.value = select_option_value;
-			} else {
-				if (original.hasAttribute('multiple')) {
-					select_option.classList.toggle('_selected');
-					selectMultiItems();
-				} else {
-					select.querySelector('.select__value').innerHTML = '<span>' + select_option_text + '</span>';
-					original.value = select_option_value;
-					select_option.style.display = 'none';
-				}
-			}
-			let type;
-			if (original.hasAttribute('multiple')) {
-				type = 'multiple';
-			}
-			selectItemActions(type);
-		});
-	}
-}
-function select_get_options(select_options) {
-	if (select_options) {
-		let select_options_content = '';
-		for (let index = 0; index < select_options.length; index++) {
-			const select_option = select_options[index];
-			const select_option_value = select_option.value;
-			if (select_option_value != '') {
-				const select_option_text = select_option.innerHTML;
-				select_options_content = select_options_content + '<div data-value="' + select_option_value + '" class="select__option">' + select_option_text + '</div>';
-			}
-		}
-		return select_options_content;
-	}
-}
-function select_search(e) {
-	let select_block = e.target.closest('.select ').querySelector('.select__options');
-	let select_options = e.target.closest('.select ').querySelectorAll('.select__option');
-	let select_search_text = e.target.value.toUpperCase();
-
-	for (let i = 0; i < select_options.length; i++) {
-		let select_option = select_options[i];
-		let select_txt_value = select_option.textContent || select_option.innerText;
-		if (select_txt_value.toUpperCase().indexOf(select_search_text) > -1) {
-			select_option.style.display = "";
-		} else {
-			select_option.style.display = "none";
-		}
-	}
-}
-function selects_update_all() {
-	let selects = document.querySelectorAll('select');
-	if (selects) {
-		for (let index = 0; index < selects.length; index++) {
-			const select = selects[index];
-			select_item(select);
-		}
-	}
-}
-
-//Placeholers
-let inputs = document.querySelectorAll('input[data-value],textarea[data-value]');
-inputs_init(inputs);
-
-function inputs_init(inputs) {
-	if (inputs.length > 0) {
-		for (let index = 0; index < inputs.length; index++) {
-			const input = inputs[index];
-			const input_g_value = input.getAttribute('data-value');
-			input_placeholder_add(input);
-			if (input.value != '' && input.value != input_g_value) {
-				input_focus_add(input);
-			}
-			input.addEventListener('focus', function (e) {
-				if (input.value == input_g_value) {
-					input_focus_add(input);
-					input.value = '';
-				}
-				if (input.getAttribute('data-type') === "pass") {
-					if (input.parentElement.querySelector('._viewpass')) {
-						if (!input.parentElement.querySelector('._viewpass').classList.contains('_active')) {
-							input.setAttribute('type', 'password');
-						}
-					} else {
-						input.setAttribute('type', 'password');
-					}
-				}
-				if (input.classList.contains('_date')) {
-					/*
-					input.classList.add('_mask');
-					Inputmask("99.99.9999", {
-						//"placeholder": '',
-						clearIncomplete: true,
-						clearMaskOnLostFocus: true,
-						onincomplete: function () {
-							input_clear_mask(input, input_g_value);
-						}
-					}).mask(input);
-					*/
-				}
-				if (input.classList.contains('_phone')) {
-					//'+7(999) 999 9999'
-					//'+38(999) 999 9999'
-					//'+375(99)999-99-99'
-					input.classList.add('_mask');
-					Inputmask("+375 (99) 9999999", {
-						//"placeholder": '',
-						clearIncomplete: true,
-						clearMaskOnLostFocus: true,
-						onincomplete: function () {
-							input_clear_mask(input, input_g_value);
-						}
-					}).mask(input);
-				}
-				if (input.classList.contains('_digital')) {
-					input.classList.add('_mask');
-					Inputmask("9{1,}", {
-						"placeholder": '',
-						clearIncomplete: true,
-						clearMaskOnLostFocus: true,
-						onincomplete: function () {
-							input_clear_mask(input, input_g_value);
-						}
-					}).mask(input);
-				}
-				form_remove_error(input);
-			});
-			input.addEventListener('blur', function (e) {
-				if (input.value == '') {
-					input.value = input_g_value;
-					input_focus_remove(input);
-					if (input.classList.contains('_mask')) {
-						input_clear_mask(input, input_g_value);
-					}
-					if (input.getAttribute('data-type') === "pass") {
-						input.setAttribute('type', 'text');
-					}
-				}
-			});
-			if (input.classList.contains('_date')) {
-				const calendarItem = datepicker(input, {
-					customDays: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
-					customMonths: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
-					overlayButton: 'Применить',
-					overlayPlaceholder: 'Год (4 цифры)',
-					startDay: 1,
-					formatter: (input, date, instance) => {
-						const value = date.toLocaleDateString()
-						input.value = value
-					},
-					onSelect: function (input, instance, date) {
-						input_focus_add(input.el);
-					}
-				});
-				const dataFrom = input.getAttribute('data-from');
-				const dataTo = input.getAttribute('data-to');
-				if (dataFrom) {
-					calendarItem.setMin(new Date(dataFrom));
-				}
-				if (dataTo) {
-					calendarItem.setMax(new Date(dataTo));
-				}
-			}
-		}
-	}
-}
-function input_placeholder_add(input) {
-	const input_g_value = input.getAttribute('data-value');
-	if (input.value == '' && input_g_value != '') {
-		input.value = input_g_value;
-	}
-}
-function input_focus_add(input) {
-	input.classList.add('_focus');
-	input.parentElement.classList.add('_focus');
-}
-function input_focus_remove(input) {
-	input.classList.remove('_focus');
-	input.parentElement.classList.remove('_focus');
-}
-function input_clear_mask(input, input_g_value) {
-	input.inputmask.remove();
-	input.value = input_g_value;
-	input_focus_remove(input);
-}
-
-//QUANTITY
-let quantityButtons = document.querySelectorAll('.quantity__button');
-if (quantityButtons.length > 0) {
-	for (let index = 0; index < quantityButtons.length; index++) {
-		const quantityButton = quantityButtons[index];
-		quantityButton.addEventListener("click", function (e) {
-			let value = parseInt(quantityButton.closest('.quantity').querySelector('input').value);
-			if (quantityButton.classList.contains('quantity__button_plus')) {
-				value++;
-			} else {
-				value = value - 1;
-				if (value < 1) {
-					value = 1
-				}
-			}
-			quantityButton.closest('.quantity').querySelector('input').value = value;
-		});
-	}
-}
-
-//RANGE
-const priceSlider = document.querySelector('.price-filter__slider');
-if (priceSlider) {
-
-	let textFrom = priceSlider.getAttribute('data-from');
-	let textTo = priceSlider.getAttribute('data-to');
-
-	noUiSlider.create(priceSlider, {
-		start: [0, 200000],
-		connect: true,
-		tooltips: [wNumb({ decimals: 0, prefix: textFrom + ' ' }), wNumb({ decimals: 0, prefix: textTo + ' ' })],
-		range: {
-			'min': [0],
-			'max': [200000]
-		}
-	});
-
-	/*
-	const priceStart = document.getElementById('price-start');
-	const priceEnd = document.getElementById('price-end');
-	priceStart.addEventListener('change', setPriceValues);
-	priceEnd.addEventListener('change', setPriceValues);
-	*/
-
-	function setPriceValues() {
-		let priceStartValue;
-		let priceEndValue;
-		if (priceStart.value != '') {
-			priceStartValue = priceStart.value;
-		}
-		if (priceEnd.value != '') {
-			priceEndValue = priceEnd.value;
-		}
-		priceSlider.noUiSlider.set([priceStartValue, priceEndValue]);
-	}
-}
