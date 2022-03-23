@@ -75,10 +75,9 @@ if (buttonsPlay.length > 0) {
 		buttonsPlay[index].addEventListener('click', function (e) {
 			buttonsPlay[index].style.opacity = 0;
 			buttonsPlay[index].style.visibility = 'hidden';
-			videoBlock.classList.remove("_ibg");
-			_ibg();
-			videoBlock.querySelector("img").style.display = "none";
-			console.log(videoBlock.querySelector("img"));
+			// videoBlock.classList.remove("_ibg");
+			// _ibg();
+			// videoBlock.querySelector("img").style.display = "none";
 			videoBlock.insertAdjacentHTML('afterbegin', `<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&amp;mute=1"
 			title="YouTube video player" frameborder="0"
 			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

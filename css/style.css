@@ -2498,9 +2498,6 @@ body._lock {
      object-position: center;
   -o-object-fit: cover;
      object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 .main-page__play {
