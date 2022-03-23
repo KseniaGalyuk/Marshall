@@ -19,92 +19,32 @@ window.onload = function () {
 }
 
 // слайдер swiper
-if (document.querySelector('.swiper')) {
-	new Swiper('.swiper', {  //Класс должен быть указан блока, на который повешан слайдер
+if (document.querySelector('.main-page__slider')) {
+	new Swiper('.main-page__slider', {
 		//Навигация
 		pagination: {
-			el: '.swiper-pagination',// не обязательно ставить этот класс, если блок уже назван, вставить его класс в скобки
-			// Буллеты
-			//тип по умолчанию
+			el: '.swiper-pagination',
 			type: 'bullets',
-			//можно ли на него нажимать
 			clickable: true,
 		},
-		// Навигация стрелки
-		// Arrows
-		// Чтобы обратиться именно к этим стрелкам, а не к стрелкам с таким же названием в другом блоке, надо обратиться через родителя
-		navigation: {
-			nextEl: ".slider__main .slider-arrow__next", // не обязательно ставить этот класс, если блок уже назван, вставить его класс в скобки
-			prevEl: ".slider__main .slider-arrow__prev", // не обязательно ставить этот класс, если блок уже назван, вставить его класс в скобки
-		},
-
 		//Переключение с помощью клавиатуры
 		keyboard: {
-			//включить/выключить
 			enabled: true,
-			//Только когда слайдер в пределах вьюпорта вкдючить/выключить
 			onlyInViewport: true,
-			// Управление клавишами pageUp/pageDown включить/выключить
-			pageUpDown: true,
+			pageUpDown: false,
 		},
-
-
-		// Переключение колесом мыши
-		mousewheel: {
-			// Чувствительность колеса мыши 0-не работает, можно больше 1
-			sensitivity: 1,
-			//Класс объекта на котором сработает прокрутка мышью
-			// Если слайдеров много, они сработают все, в таком случае лучше оставлять по умолчанию
-			eventsTarget: '.swiper', //Обычно класс тот же, что и сверху
-		},
-
-
 		// Количество слайдов для показа, можно указывать не целые числа, можно 'auto'-колво слайдеров выводится автоматически, в зависимости от контента или заданной ширины
-		//slidesPerView: 1,
-
-
+		slidesPerView: 1,
 		// Если слайдов меньше чем нужно, слайдер полностью перестанет работать, пока будет нужного количества
 		watchOverflow: true,
-
-
-		// Отступ между слайдами
-		spaceBetween: 20,
-
-
 		// Активный слайдер по центру
 		// centeredSlides: true,
-
-
 		// Бесконечный слайдер
-		//loop: true,
-
-
-		// Свободный режим, можно листать в любое положение
-		//freeMode:true,
-
-		// Брейк поинты, работают по принципу мобайл ферст, срабатывают н аширине больще указанной
-		// Этим способом нельзя координально измеить логику слайдера, например поменять горизонтальный скролл на вертикальный
-		breakpoints: {
-			320: {
-				slidesPerView: 1,
-			},
-			1150: {
-				slidesPerView: 2,
-				keyboard: {
-					enabled: false,
-				},
-				mousewheel: {
-					enabled: false,
-				},
-			}
-		},
+		loop: true,
 		// Парралакс эффект
 		parallax: true,
 		// Добавить атрибуты data-swiper-parallax-opacity="0" data-swiper-parallax-x="-100%" к элементу для парралах эффекта
-		// Скорость
 		speed: 800,
-
-		// Точно не знаю за что отвечают следующие параметры
 		loopAdditionalSlides: 5,
 		observer: true,
 		observeParents: true,
@@ -112,6 +52,7 @@ if (document.querySelector('.swiper')) {
 	});
 
 }
+
 // Изменение прозрачности пунктов меню при наведении на один из них
 const menuItems = document.querySelectorAll('.menu__item');
 if (menuItems.length > 0 && !isMobile.any()) {
@@ -425,44 +366,15 @@ if (spollersArray.length > 0) {
 	}
 }
 //прокрутка к блоку
-const questions = document.querySelector('.questions');
-const questionsX = document.querySelectorAll('.questions_scroll');
-if (questionsX.length > 0) {
-	for (let index = 0; index < questionsX.length; index++) {
-		questionsX[index].addEventListener('click', () => scrollToBlock(questions));
+const productsMain = document.querySelector('.products-main');
+const mainPageArrow = document.querySelectorAll('.main-page__arrow');
+if (mainPageArrow.length > 0) {
+	for (let index = 0; index < mainPageArrow.length; index++) {
+		mainPageArrow[index].addEventListener('click', () => scrollToBlock(productsMain));
 	}
 };
-//анимация при скролле
-const animItems = document.querySelectorAll('._anim-items');//этот класс добавляется к анимируемым объектам
-if (animItems.length > 0) {
-	window.addEventListener('scroll', animOnScroll);
-	function animOnScroll() {
-		for (let index = 0; index < animItems.length; index++) {
-			const animItem = animItems[index];
-			const animItemHeight = animItem.offsetHeight; //высота объекта
-			const animItemoffset = offset(animItem).top; //позиция объекта относительно верха
-			const animStart = 4; //регулирует момент старта анимации, в данном случае при скролле 1/4 от высоты объекта
 
-			let animItemPoint = window.innerHeight - animItemHeight / animStart;
-			if (animItemHeight > window.innerHeight) {
-				animItemPoint = window.innerHeight - window.innerHeight / animStart;
-			}
-
-			if ((scrollY > animItemoffset - animItemPoint) && scrollY < (animItemoffset + animItemHeight)) {
-				animItem.classList.add('_active');
-			} else {
-				if (!animItem.classList.contains('_anim-no-hide')) { //этот класс для того, чтобы не запускать анимацию повторно и не убирать класс _active
-					animItem.classList.remove('_active');
-				}
-			}
-		}
-	}
-	setTimeout(() => { //Если есть анимации на верхнем блоке, она покакжется без скролла через 0.3 сек
-		animOnScroll();
-	}, 300);
-}
-
-// Cтоимость закза в корзине
+// Cтоимость закaза в корзине
 const arrowsMore = document.querySelectorAll('.form-cart-list__amount-more');
 const arrowsLess = document.querySelectorAll('.form-cart-list__amount-less');
 const arrowsInput = document.querySelectorAll('.form-cart-list__amount-input');
@@ -501,6 +413,35 @@ if (arrowsMore.length > 0 && arrowsLess.length > 0 && arrowsInput.length > 0) {
 		})
 	});
 }
+
+// Перемещаем кнопку в main-page
+const mediaQuery = window.matchMedia('(max-width: 991.98px)')
+function handleTabletChange(e) {
+	if (e.matches) {
+		const mainPageButton = document.querySelectorAll('.main-page__button');
+		for (let i = 0; i < mainPageButton.length; i++) {
+			const mainPageBody = mainPageButton[i].closest('.main-page__body');
+			mainPageBody.append(mainPageButton[i]);
+		}
+	}
+}
+mediaQuery.addListener(handleTabletChange);
+handleTabletChange(mediaQuery);
+
+const mediaQueryMin = window.matchMedia('(min-width: 991.98px)')
+function handleTabletChangeMin(e) {
+	if (e.matches) {
+		const mainPageButton = document.querySelectorAll('.main-page__button');
+		for (let i = 0; i < mainPageButton.length; i++) {
+			const mainPageBody = mainPageButton[i].closest('.main-page__body');
+			const mainPageContent = mainPageBody.querySelector('.main-page__content');
+			mainPageContent.append(mainPageButton[i]);
+		}
+	}
+}
+mediaQueryMin.addListener(handleTabletChangeMin);
+handleTabletChangeMin(mediaQueryMin);
+
 //*< Функции>==========================================================================================
 //Функция считает и выводит стоимость заказа
 function priceFunc() {
