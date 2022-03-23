@@ -668,6 +668,17 @@ body._lock {
   transition: all 0.3s ease 0s;
 }
 
+.header__logo_link {
+  display: block;
+  cursor: pointer;
+}
+
+@media (any-hover: hover) {
+  .header__logo_link:hover {
+    color: #dabb90;
+  }
+}
+
 @media (max-width: 53.125em) {
   .header__logo {
     z-index: 10;
@@ -856,6 +867,9 @@ body._lock {
 }
 
 @media (min-width: 85.625em) {
+  .menu__item {
+    opacity: 0.5;
+  }
   .menu__item:not(:last-child) {
     padding-right: 12.5px;
   }
@@ -881,6 +895,10 @@ body._lock {
   }
 }
 
+.menu__item_active, .menu__item_no {
+  opacity: 1;
+}
+
 .menu__link {
   color: #ededed;
   font-weight: 500;
@@ -891,6 +909,9 @@ body._lock {
 @media (max-width: 85.625em) {
   .menu__link {
     color: #1a1f24;
+    -webkit-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
   }
 }
 
@@ -1833,6 +1854,12 @@ body._lock {
   }
 }
 
+@media (max-width: 85.625em) and (any-hover: hover) {
+  .icon-menu:hover span {
+    background-color: #ededed;
+  }
+}
+
 @media (max-width: 85.625em) {
   .icon-menu span {
     -webkit-transition: all 0.3s ease 0s;
@@ -2467,6 +2494,8 @@ body._lock {
 .main-page__video iframe {
   width: 100%;
   height: 100%;
+  -o-object-position: center;
+     object-position: center;
   -o-object-fit: cover;
      object-fit: cover;
   position: absolute;
