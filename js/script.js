@@ -5,19 +5,6 @@ let unlock = true;
 // Функция возвращает устройство на котором открыт сайт   isMobile.any()    вернет true, если сайт открыт на устройстве с тачскрином
 var isMobile = { Android: function () { return navigator.userAgent.match(/Android/i); }, BlackBerry: function () { return navigator.userAgent.match(/BlackBerry/i); }, iOS: function () { return navigator.userAgent.match(/iPhone|iPad|iPod/i); }, Opera: function () { return navigator.userAgent.match(/Opera Mini/i); }, Windows: function () { return navigator.userAgent.match(/IEMobile/i); }, any: function () { return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows()); } };
 //*</ Общие переменные>==========================================================================================
-// делегирование
-window.onload = function () {
-	document.addEventListener("click", documentActions);
-	function documentActions(e) {
-		const targetElement = e.target;
-		if (targetElement.classList.contains('search-form__icon')) {
-			document.querySelector(".search-form").classList.toggle("_active");
-		} else if (!targetElement.closest('.search-form') && document.querySelectorAll(".search-form._active")) {
-			document.querySelector(".search-form").classList.remove("_active");
-		}
-	}
-}
-
 // слайдер swiper
 if (document.querySelector('.main-page__slider')) {
 	new Swiper('.main-page__slider', {
@@ -42,15 +29,13 @@ if (document.querySelector('.main-page__slider')) {
 		observer: true,
 		observeParents: true,
 		preloadImages: false,
-		autoHeight: true,
-		autoplay: {
-			delay: 3000,
-			disableOnInteraction: false,
-		}
+		// autoplay: {
+		// 	delay: 3000,
+		// 	disableOnInteraction: false,
+		// }
 	});
 
 }
-
 // Изменение прозрачности пунктов меню при наведении на один из них
 const menuItems = document.querySelectorAll('.menu__item');
 if (menuItems.length > 0 && !isMobile.any()) {
@@ -73,7 +58,22 @@ const formText = document.querySelector('.form-newsletter__mail'); //Блок, �
 if (formText != null) {
 	addAnEvent(formText);
 }
-
+// загрузка видео с ютуба
+const buttonsPlay = document.querySelectorAll('.main-page__play');
+if (buttonsPlay.length > 0) {
+	for (let index = 0; index < buttonsPlay.length; index++) {
+		const videoBlock = buttonsPlay[index].closest('.main-page__body').querySelector('.main-page__video');
+		buttonsPlay[index].addEventListener('click', function (e) {
+			buttonsPlay[index].style.opacity = 0;
+			buttonsPlay[index].style.visibility = 'hidden';
+			//_removeClasses(videoBlock, "._ibg");
+			videoBlock.insertAdjacentHTML('afterbegin', `<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&amp;mute=1"
+			title="YouTube video player" frameborder="0"
+			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+			allowfullscreen></iframe>`);
+		});
+	}
+}
 // header при скролле
 // У хедер указываем минимальную высоту,при прокрутке этой высоты добавится класс _scroll, с которым можно что-то сделать. В обратную сторону класс удалится
 const headerElement = document.querySelector(".header");
@@ -107,13 +107,13 @@ if (iconMenu != null) {
 		// Открытие корзины по нажатию на иконку
 		if (e.target.classList.contains('cart-header__icon')) {
 			cartHeader.classList.toggle("_active");
-			document.querySelector('.search-form__btn').classList.toggle("_active");
+			document.querySelector('.search__btn').classList.toggle("_active");
 			document.querySelector('.header__logo').classList.toggle("_active");
 			e.preventDefault();
 		}
 		if ((!e.target.closest('.cart-header__content') && !e.target.classList.contains('cart-header__icon')) || e.target.closest('.cart-header__close')) {
 			cartHeader.classList.remove("_active");
-			document.querySelector('.search-form__btn').classList.remove("_active");
+			document.querySelector('.search__btn').classList.remove("_active");
 			document.querySelector('.header__logo').classList.remove("_active");
 		}
 		if (!menuBody.classList.contains('_active') && !cartHeader.classList.contains('_active')) {
