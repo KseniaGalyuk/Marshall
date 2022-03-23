@@ -671,7 +671,6 @@ body._lock {
 .header__logo_link {
   display: block;
   cursor: pointer;
-  color: #dabb90;
 }
 
 @media (any-hover: hover) {
