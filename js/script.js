@@ -33,22 +33,20 @@ if (document.querySelector('.main-page__slider')) {
 			onlyInViewport: true,
 			pageUpDown: false,
 		},
-		// Количество слайдов для показа, можно указывать не целые числа, можно 'auto'-колво слайдеров выводится автоматически, в зависимости от контента или заданной ширины
 		slidesPerView: 1,
-		// Если слайдов меньше чем нужно, слайдер полностью перестанет работать, пока будет нужного количества
 		watchOverflow: true,
-		// Активный слайдер по центру
-		// centeredSlides: true,
-		// Бесконечный слайдер
 		loop: true,
-		// Парралакс эффект
 		parallax: true,
-		// Добавить атрибуты data-swiper-parallax-opacity="0" data-swiper-parallax-x="-100%" к элементу для парралах эффекта
 		speed: 800,
 		loopAdditionalSlides: 5,
 		observer: true,
 		observeParents: true,
 		preloadImages: false,
+		autoHeight: true,
+		autoplay: {
+			delay: 3000,
+			disableOnInteraction: false,
+		}
 	});
 
 }
