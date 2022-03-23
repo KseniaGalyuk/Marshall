@@ -877,6 +877,15 @@ body._lock {
   .menu__item:not(:first-child) {
     padding-left: 12.5px;
   }
+  .menu__item_no, .menu__item_active {
+    opacity: 1;
+  }
+  .menu__item._op1 {
+    opacity: 1;
+  }
+  .menu__item._op {
+    opacity: 0.5;
+  }
 }
 
 @media (max-width: 85.625em) {
@@ -896,10 +905,6 @@ body._lock {
   }
 }
 
-.menu__item_active, .menu__item_no {
-  opacity: 1;
-}
-
 .menu__link {
   color: #ededed;
   font-weight: 500;
@@ -913,6 +918,12 @@ body._lock {
     -webkit-transition: all 0.3s ease 0s;
     -o-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
+  }
+}
+
+@media (max-width: 85.625em) and (any-hover: hover) {
+  .menu__link:hover {
+    color: #ededed;
   }
 }
 
@@ -2493,12 +2504,11 @@ body._lock {
 }
 
 .main-page__video iframe {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   width: 100%;
   height: 100%;
-  -o-object-position: center;
-     object-position: center;
-  -o-object-fit: cover;
-     object-fit: cover;
   position: absolute;
   top: 0;
   right: 0;
