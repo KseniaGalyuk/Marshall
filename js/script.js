@@ -311,6 +311,7 @@ mediaQueryMin.addListener(handleTabletChangeMin);
 handleTabletChangeMin(mediaQueryMin);
 
 // фильтрация товаров
+const catalogBtn = document.querySelector('.catalog-speakers__button');
 const catalogItems = document.querySelectorAll('.item-catalog-speakers');
 const filterList = document.querySelector('.filter-speakers__list');
 const catalog = document.querySelector('.catalog-speakers');
@@ -319,6 +320,7 @@ if (filterList != null) {
 	filterList.addEventListener('click', (e) => {
 		if (e.target.classList.contains("filter-speakers__item")) {
 			e.target.classList.toggle('_active');
+			catalogBtn.style.display = "none";
 			let filterClass = e.target.dataset.filter;
 			if (e.target.classList.contains("_active")) {
 				filtersActive.push(filterClass);
@@ -349,7 +351,6 @@ if (filterList != null) {
 }
 // показ дополнительных товаров
 const catalogBody = document.querySelector('.catalog-speakers__body');
-const catalogBtn = document.querySelector('.catalog-speakers__button');
 if (catalogBtn != null) {
 	catalogBtn.addEventListener('click', () => {
 		const catalogChild = catalogBody.querySelectorAll('.item-catalog-speakers');
@@ -358,13 +359,13 @@ if (catalogBtn != null) {
 		}
 		_ibg();
 		catalogBtn.style.display = "none";
-		const filterListChildrens = filterList.querySelectorAll(".filter-speakers__item");
-		if (filterListChildrens.length > 0) {
-			filterListChildrens.forEach(filterListChildren => {
-				filterListChildren.classList.remove('_active');
-			});
-			filtersActive = [];
-		}
+		// const filterListChildrens = filterList.querySelectorAll(".filter-speakers__item");
+		// if (filterListChildrens.length > 0) {
+		// 	filterListChildrens.forEach(filterListChildren => {
+		// 		filterListChildren.classList.remove('_active');
+		// 	});
+		// 	filtersActive = [];
+		// }
 	})
 }
 //прокрутка к блоку
