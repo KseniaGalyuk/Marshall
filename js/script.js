@@ -69,7 +69,7 @@ if (menuItems.length > 0 && !isMobile.any()) {
 	});
 }
 //перемещение лейбла у тегов форм
-const formText = document.querySelector('.form-newsletter__mail'); //Блок, внутри котрого инпут и лэйбл, надо прописать стил при получении класса _active (типо лейбл уменьшаеьтся и перемещается выше)
+const formText = document.querySelector('.form-newsletter__mail');
 if (formText != null) {
 	addAnEvent(formText);
 }
@@ -81,9 +81,6 @@ if (buttonsPlay.length > 0) {
 		buttonsPlay[index].addEventListener('click', function (e) {
 			buttonsPlay[index].style.opacity = 0;
 			buttonsPlay[index].style.visibility = 'hidden';
-			// videoBlock.classList.remove("_ibg");
-			// _ibg();
-			// videoBlock.querySelector("img").style.display = "none";
 			videoBlock.insertAdjacentHTML('afterbegin', `<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&amp;mute=1"
 			title="YouTube video player" frameborder="0"
 			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -91,8 +88,9 @@ if (buttonsPlay.length > 0) {
 		});
 	}
 }
+
+
 // header при скролле
-// У хедер указываем минимальную высоту,при прокрутке этой высоты добавится класс _scroll, с которым можно что-то сделать. В обратную сторону класс удалится
 const headerElement = document.querySelector(".header");
 const callback = function (entries, observer) {
 	if (entries[0].isIntersecting) {
@@ -140,59 +138,51 @@ if (iconMenu != null) {
 		}
 	});
 };
-//спойлеры
-const iconQuestions = document.querySelectorAll('.question');
-//const iconsQuestions = document.querySelectorAll('.question__icon');
-if (iconQuestions.length > 0) {
-	spollers(iconQuestions);
-};
-function spollers(iconQuestions) {
-	iconQuestions.forEach(iconQuestion => {
-		iconQuestionBody(iconQuestion);
-		iconQuestion.addEventListener('click', setSpollersAction)
-	});
-}
-function iconQuestionBody(iconQuestion) {
-	if (!iconQuestion.classList.contains('_active')) {
-		iconQuestion.lastElementChild.hidden = true;
+// Спойлер
+const spollersArray = document.querySelectorAll('[data-spollers]');
+if (spollersArray.length > 0) {
+	if (spollersArray.length > 0) {
+		initSpollers(spollersArray);
 	}
-}
-function setSpollersAction(e) {
-	const el = e.target;
-	const spollerBlock = el.closest('.question');
-	if (!spollerBlock.querySelectorAll('._slide').length) {
-		if (el.classList.contains('question__icon')) {
-			el.classList.toggle('_active');
-			el.parentNode.classList.toggle('_active');
-			spollerBlock.firstElementChild.classList.remove('_active');
-			_slideToggle(spollerBlock.lastElementChild, 500);
-		} if (el.classList.contains('question__title')) {
-			spollerBlock.firstElementChild.classList.toggle('_active');
-			el.parentNode.classList.toggle('_active');
-			_slideToggle(spollerBlock.lastElementChild, 500);
-		} if (el.classList.contains('question__text')) {
-			el.parentNode.classList.remove('_active');
-			el.previousElementSibling.classList.remove('_active');
-			spollerBlock.firstElementChild.classList.remove('_active');
-			_slideToggle(spollerBlock.lastElementChild, 500);
-		} else {
-			el.classList.toggle('_active');
-			spollerBlock.firstElementChild.nextElementSibling.classList.toggle('_active');
-			if (el.firstElementChild != null) {
-				el.firstElementChild.classList.toggle('_active');
-			}
-			_slideToggle(spollerBlock.lastElementChild, 500);
+	function initSpollers(spollersArray) {
+		spollersArray.forEach(spollersBlock => {
+			spollersBlock.classList.add('_init');
+			initSpollerBody(spollersBlock);
+			spollersBlock.addEventListener("click", setSpollerAction);
+		});
+	}
+	function initSpollerBody(spollersBlock) {
+		const spollerTitles = spollersBlock.querySelectorAll('[data-spoller]');
+		if (spollerTitles.length > 0) {
+			spollerTitles.forEach(spollerTitle => {
+				spollerTitle.removeAttribute('tabindex');
+				if (!spollerTitle.classList.contains('_active')) {
+					const spolerBlockClose = spollerTitle.closest('.filter-speakers__spoller').lastElementChild;
+					spolerBlockClose.hidden = true;
+				}
+			});
 		}
 	}
-	// e.preventDefault();
-}
-/*function hideSpollerBody(spollerBlock) {
-	const spoller_activeTitle = spollerBlock.querySelector('.question__title._active');
-	if (spoller_activeTitle) {
-		spoller_activeTitle.classList.remove('_active');
-		_slideUp(spoller_activeTitle.nextElementSibling, 500);
+	function setSpollerAction(e) {
+		const el = e.target;
+		if (el.hasAttribute('data-spoller') || el.closest('[data-spoller]')) {
+			const spollerTitle = el.hasAttribute('data-spoller') ? el : el.closest('[data-spoller]');
+			const spollersBlock = spollerTitle.closest('[data-spollers]');
+			if (!spollersBlock.querySelectorAll('._slide').length) {
+				spollerTitle.classList.toggle('_active');
+				const spolerBlockClose = spollerTitle.closest('.filter-speakers__spoller').lastElementChild;
+				_slideToggle(spolerBlockClose, 500);
+			}
+			e.preventDefault();
+			const filterSpan = spollerTitle.querySelector('span');
+			if (spollerTitle.classList.contains('_active')) {
+				filterSpan.innerHTML = "hide";
+			} else {
+				filterSpan.innerHTML = "show";
+			}
+		}
 	}
-}*/
+}
 let _slideUp = (target, duration = 500) => {
 	if (!target.classList.contains('_slide')) {
 		target.classList.add('_slide');
@@ -255,131 +245,6 @@ let _slideToggle = (target, duration = 500) => {
 		return _slideUp(target, duration);
 	}
 }
-// Спойлер фрилансера (Оставить функции _slideUp _slideDown _slideToggle)
-/*
-Для родителя слойлеров пишем атрибут data-spollers
-Для заголовков слойлеров пишем атрибут data-spoller
-Если нужно включать\выключать работу спойлеров на разных размерах экранов
-пишем параметры ширины и типа брейкпоинта.
-Например: 
-data-spollers="992,max" - спойлеры будут работать только на экранах меньше или равно 992px
-data-spollers="768,min" - спойлеры будут работать только на экранах больше или равно 768px
-
-Если нужно что бы в блоке открывался болько один слойлер добавляем атрибут data-one-spoller
-*/
-const spollersArray = document.querySelectorAll('[data-spollers]');
-if (spollersArray.length > 0) {
-	// Получение обычных слойлеров
-	const spollersRegular = Array.from(spollersArray).filter(function (item, index, self) {
-		return !item.dataset.spollers.split(",")[0];
-	});
-	// Инициализация обычных слойлеров
-	if (spollersRegular.length > 0) {
-		initSpollers(spollersRegular);
-	}
-
-	// Получение слойлеров с медиа запросами
-	const spollersMedia = Array.from(spollersArray).filter(function (item, index, self) {
-		return item.dataset.spollers.split(",")[0];
-	});
-
-	// Инициализация слойлеров с медиа запросами
-	if (spollersMedia.length > 0) {
-		const breakpointsArray = [];
-		spollersMedia.forEach(item => {
-			const params = item.dataset.spollers;
-			const breakpoint = {};
-			const paramsArray = params.split(",");
-			breakpoint.value = paramsArray[0];
-			breakpoint.type = paramsArray[1] ? paramsArray[1].trim() : "max";
-			breakpoint.item = item;
-			breakpointsArray.push(breakpoint);
-		});
-
-		// Получаем уникальные брейкпоинты
-		let mediaQueries = breakpointsArray.map(function (item) {
-			return '(' + item.type + "-width: " + item.value + "px)," + item.value + ',' + item.type;
-		});
-		mediaQueries = mediaQueries.filter(function (item, index, self) {
-			return self.indexOf(item) === index;
-		});
-
-		// Работаем с каждым брейкпоинтом
-		mediaQueries.forEach(breakpoint => {
-			const paramsArray = breakpoint.split(",");
-			const mediaBreakpoint = paramsArray[1];
-			const mediaType = paramsArray[2];
-			const matchMedia = window.matchMedia(paramsArray[0]);
-
-			// Объекты с нужными условиями
-			const spollersArray = breakpointsArray.filter(function (item) {
-				if (item.value === mediaBreakpoint && item.type === mediaType) {
-					return true;
-				}
-			});
-			// Событие
-			matchMedia.addListener(function () {
-				initSpollers(spollersArray, matchMedia);
-			});
-			initSpollers(spollersArray, matchMedia);
-		});
-	}
-	// Инициализация
-	function initSpollers(spollersArray, matchMedia = false) {
-		spollersArray.forEach(spollersBlock => {
-			spollersBlock = matchMedia ? spollersBlock.item : spollersBlock;
-			if (matchMedia.matches || !matchMedia) {
-				spollersBlock.classList.add('_init');
-				initSpollerBody(spollersBlock);
-				spollersBlock.addEventListener("click", setSpollerAction);
-			} else {
-				spollersBlock.classList.remove('_init');
-				initSpollerBody(spollersBlock, false);
-				spollersBlock.removeEventListener("click", setSpollerAction);
-			}
-		});
-	}
-	// Работа с контентом
-	function initSpollerBody(spollersBlock, hideSpollerBody = true) {
-		const spollerTitles = spollersBlock.querySelectorAll('[data-spoller]');
-		if (spollerTitles.length > 0) {
-			spollerTitles.forEach(spollerTitle => {
-				if (hideSpollerBody) {
-					spollerTitle.removeAttribute('tabindex');
-					if (!spollerTitle.classList.contains('_active')) {
-						spollerTitle.nextElementSibling.hidden = true;
-					}
-				} else {
-					spollerTitle.setAttribute('tabindex', '-1');
-					spollerTitle.nextElementSibling.hidden = false;
-				}
-			});
-		}
-	}
-	function setSpollerAction(e) {
-		const el = e.target;
-		if (el.hasAttribute('data-spoller') || el.closest('[data-spoller]')) {
-			const spollerTitle = el.hasAttribute('data-spoller') ? el : el.closest('[data-spoller]');
-			const spollersBlock = spollerTitle.closest('[data-spollers]');
-			const oneSpoller = spollersBlock.hasAttribute('data-one-spoller') ? true : false;
-			if (!spollersBlock.querySelectorAll('._slide').length) {
-				if (oneSpoller && !spollerTitle.classList.contains('_active')) {
-					hideSpollersBody(spollersBlock);
-				}
-				spollerTitle.classList.toggle('_active');
-				_slideToggle(spollerTitle.nextElementSibling, 500);
-			}
-			e.preventDefault();
-		}
-	}
-	function hideSpollersBody(spollersBlock) {
-		const spoller_activeTitle = spollersBlock.querySelector('[data-spoller]._active');
-		if (spoller_activeTitle) {
-			spoller_activeTitle.classList.remove('_active');
-			_slideUp(spoller_activeTitle.nextElementSibling, 500);
-		}
-	}
-}
 //прокрутка к блоку
 const productsMain = document.querySelector('.products-main');
 const mainPageArrow = document.querySelectorAll('.main-page__arrow');
@@ -397,7 +262,6 @@ if (cartListItems.length > 0) {
 	priceFunc();
 }
 if (arrowsMore.length > 0 && arrowsLess.length > 0 && arrowsInput.length > 0) {
-	// Делаем кнопки кликабельными, устанавливаем макс и мин кол-во порций
 	arrowsMore.forEach(arrowMore => {
 		arrowMore.addEventListener('click', function () {
 			++(arrowMore.previousElementSibling.value);
@@ -454,6 +318,52 @@ function handleTabletChangeMin(e) {
 mediaQueryMin.addListener(handleTabletChangeMin);
 handleTabletChangeMin(mediaQueryMin);
 
+// фильтрация товаров
+const catalogItems = document.querySelectorAll('.item-catalog-speakers');
+const filterList = document.querySelector('.filter-speakers__list');
+let filtersActive = [];
+if (filterList != null) {
+	filterList.addEventListener('click', (e) => {
+		if (e.target.classList.contains("filter-speakers__item")) {
+			e.target.classList.toggle('_active');
+			let filterClass = e.target.dataset.filter;
+			if (e.target.classList.contains("_active")) {
+				filtersActive.push(filterClass);
+			} else {
+				filtersActive.splice(filtersActive.indexOf(filterClass, 0), 1);
+			}
+		}
+		if (filtersActive.length == 0) {
+			catalogItems.forEach(catalogItem => {
+				catalogItem.style.display = "flex";
+			});
+		}
+		catalogItems.forEach(catalogItem => {
+			for (let index = 0; index < filtersActive.length; index++) {
+				if (catalogItem.classList.contains(filtersActive[index])) {
+					catalogItem.style.display = "flex";
+					continue;
+				}
+				catalogItem.style.display = "none";
+				break;
+			}
+		});
+		_ibg();
+	})
+}
+// показ дополнительных товаров
+const catalogBody = document.querySelector('.catalog-speakers__body');
+const catalogBtn = document.querySelector('.catalog-speakers__button');
+if (catalogBtn != null) {
+	catalogBtn.addEventListener('click', () => {
+		const catalogChild = catalogBody.children;
+		for (let index = 0; index < catalogChild.length; index++) {
+			catalogChild[index].style.display = "flex";
+		}
+		_ibg();
+		catalogBtn.style.display = "none";
+	})
+}
 //*< Функции>==========================================================================================
 //Функция считает и выводит стоимость заказа
 function priceFunc() {
@@ -469,18 +379,7 @@ function priceFunc() {
 	}
 }
 //Прокрутка до блока при нажатии на кнопку
-//Пример применения
-// const questionsX = document.querySelector('.questions_scroll');
-// const questions = document.querySelector('.questions');
-// if (questionsX != null) {
-// 	questionsX.addEventListener('click', () => scrollToBlock(questions));
-// };
-// if (rationsX.length > 0) {
-// 	for (let index = 0; index < rationsX.length; index++) {
-// 		rationsX[index].addEventListener('click', () => scrollToBlock(rations));
-// 	}
-// };
-function scrollToBlock(block) { //в скобки передаем блок, до которого надо докрутить
+function scrollToBlock(block) {
 	let getTop = block.getBoundingClientRect().top;
 	let getTopDocument = getTop + window.scrollY;
 	window.scrollTo({
@@ -489,12 +388,6 @@ function scrollToBlock(block) { //в скобки передаем блок, д�
 		behavior: "smooth",
 	});
 };
-// Убирает переданный класс у переданного элемента
-function _removeClasses(el, class_name) {
-	for (var i = 0; i < el.length; i++) {
-		el[i].classList.remove(class_name);
-	}
-}
 // Функции для перемещения лейблов у тегов форм
 function addAnEvent(elem) {
 	elem.firstElementChild.addEventListener('focus', function () {
@@ -513,13 +406,6 @@ function formRemoveClass(elem) {
 		elem.classList.remove('_active');
 	}
 }
-//узнает местоположение объекта.Можно получить значение сверху и слева
-function offset(el) { //в скобках объект, чье местоположение нужно
-	const rect = el.getBoundingClientRect(),
-		scrollLeft = window.scrollX || document.documentElement.scrollLeft,
-		scrollTop = window.scrollY || document.documentElement.scrollTop;
-	return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
-}
 //Блокирует прокрутку
 const lockPadding = document.querySelectorAll('.lock-padding');
 function bodyLock() {
@@ -536,7 +422,7 @@ function bodyLock() {
 	unlock = false;
 	setTimeout(function () {
 		unlock = true;
-	}, 500); //Время, в течении которого нельзя повторно открыть поп-ап, обычно равен времени анимации
+	}, 500);
 }
 //Разблокировывает прокрутку
 function bodyUnLock() {
@@ -554,7 +440,7 @@ function bodyUnLock() {
 	unlock = false;
 	setTimeout(function () {
 		unlock = true;
-	}, 500); //Время, в течении которого нельзя повторно открыть поп-ап, обычно равен времени анимации
+	}, 500);
 }
 //Ставит картинку как фон
 function _ibg() {
@@ -566,6 +452,3 @@ function _ibg() {
 	}
 }
 _ibg();
-//*</ Функции>==========================================================================================
-// Скрипты для форм
-//let btn = document.querySelectorAll('button[type="submit"],input[type="submit"]');
