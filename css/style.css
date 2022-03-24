@@ -3319,11 +3319,23 @@ body._lock {
           transform: rotate(0deg);
 }
 
+@media (any-hover: hover) {
+  .filter-speakers__hide:hover .filter-speakers__text {
+    color: #ededed;
+  }
+  .filter-speakers__hide:hover .filter-speakers__icon span {
+    background-color: #ededed;
+  }
+}
+
 .filter-speakers__text {
   font-weight: 500;
   font-size: 1.125rem;
   line-height: 127.77778%;
   text-transform: lowercase;
+  -webkit-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
   color: #9c9c9c;
 }
 
