@@ -352,12 +352,19 @@ const catalogBody = document.querySelector('.catalog-speakers__body');
 const catalogBtn = document.querySelector('.catalog-speakers__button');
 if (catalogBtn != null) {
 	catalogBtn.addEventListener('click', () => {
-		const catalogChild = catalogBody.children;
+		const catalogChild = catalogBody.querySelectorAll('.item-catalog-speakers');
 		for (let index = 0; index < catalogChild.length; index++) {
 			catalogChild[index].style.display = "flex";
 		}
 		_ibg();
 		catalogBtn.style.display = "none";
+		const filterListChildrens = filterList.querySelectorAll(".filter-speakers__item");
+		if (filterListChildrens.length > 0) {
+			filterListChildrens.forEach(filterListChildren => {
+				filterListChildren.classList.remove('_active');
+			});
+			filtersActive = [];
+		}
 	})
 }
 //прокрутка к блоку
