@@ -245,14 +245,6 @@ let _slideToggle = (target, duration = 500) => {
 		return _slideUp(target, duration);
 	}
 }
-//прокрутка к блоку
-const productsMain = document.querySelector('.products-main');
-const mainPageArrow = document.querySelectorAll('.main-page__arrow');
-if (mainPageArrow.length > 0) {
-	for (let index = 0; index < mainPageArrow.length; index++) {
-		mainPageArrow[index].addEventListener('click', () => scrollToBlock(productsMain));
-	}
-};
 // Cтоимость закaза в корзине
 const arrowsMore = document.querySelectorAll('.form-cart-list__amount-more');
 const arrowsLess = document.querySelectorAll('.form-cart-list__amount-less');
@@ -321,6 +313,7 @@ handleTabletChangeMin(mediaQueryMin);
 // фильтрация товаров
 const catalogItems = document.querySelectorAll('.item-catalog-speakers');
 const filterList = document.querySelector('.filter-speakers__list');
+const catalog = document.querySelector('.catalog-speakers');
 let filtersActive = [];
 if (filterList != null) {
 	filterList.addEventListener('click', (e) => {
@@ -329,6 +322,9 @@ if (filterList != null) {
 			let filterClass = e.target.dataset.filter;
 			if (e.target.classList.contains("_active")) {
 				filtersActive.push(filterClass);
+				if (isMobile.any()) {
+					scrollToBlock(catalog);
+				}
 			} else {
 				filtersActive.splice(filtersActive.indexOf(filterClass, 0), 1);
 			}
@@ -364,6 +360,14 @@ if (catalogBtn != null) {
 		catalogBtn.style.display = "none";
 	})
 }
+//прокрутка к блоку
+const productsMain = document.querySelector('.products-main');
+const mainPageArrow = document.querySelectorAll('.main-page__arrow');
+if (mainPageArrow.length > 0) {
+	for (let index = 0; index < mainPageArrow.length; index++) {
+		mainPageArrow[index].addEventListener('click', () => scrollToBlock(productsMain));
+	}
+};
 //*< Функции>==========================================================================================
 //Функция считает и выводит стоимость заказа
 function priceFunc() {
