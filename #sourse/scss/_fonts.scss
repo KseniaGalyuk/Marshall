@@ -1,0 +1,5 @@
+//Подключение шрифта с использованием миксина
+@include font("Druk-Text-Wide-Cyr", "Druk-Wide-Heavy", "900", "normal");
+@include font("Druk-Text-Wide-Cyr", "Druk-Wide-Super", "999", "normal");
+@include font("Druk-Text-Wide-Cyr", "Druk-Wide-Medium", "500", "normal");
+@include iconsFont("icons", "icons", "400", "normal");

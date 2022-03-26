@@ -1,0 +1,537 @@
+//====================================================================================================
+.main-page {
+	&__slider {
+		min-height: 100vh;
+		position: relative;
+	}
+	&__slide {
+		min-height: 100vh;
+		height: auto; //!!!
+		position: relative;
+		display: flex;
+		flex-direction: column;
+	}
+	&__bcg {
+		position: absolute;
+		width: 100%;
+		min-height: 100%;
+		background-position: top;
+		&::after {
+			content: "";
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			background: rgba(26, 31, 36, 0.9);
+			@supports ((-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px))) {
+				backdrop-filter: blur(10px);
+			}
+		}
+		@media (max-width: #{$md3 + em}) {
+			display: none;
+		}
+	}
+	&__container {
+		@include adaptiv-value(padding-top, 236, 95.2, 1);
+		padding-bottom: 31px;
+		@media (max-width: #{$md2 + em}) {
+			padding-bottom: 75px;
+		}
+		position: relative;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		@media (min-width: #{$md2 + em}) {
+			justify-content: center;
+		}
+	}
+	&__title {
+		@media (min-width: #{$md3 + em}) {
+			max-width: 65%;
+		}
+		&:not(:last-child) {
+			@include adaptiv-value(margin-bottom, 50, 17.3, 1);
+		}
+		@media (max-width: #{$md3 + em}) {
+			font-family: inherit;
+			font-weight: 999;
+			font-size: 40/16 * 1rem;
+		}
+		@media (max-width: #{$md4 + em}) {
+			font-size: 24/16 * 1rem;
+			line-height: 30/24 * 100%;
+		}
+	}
+	&__body {
+		position: relative;
+		@media (min-width: #{$md2 + em}) {
+			margin-bottom: 88px;
+			display: flex;
+		}
+	}
+	&__content {
+		@media (min-width: #{$md2 + em}) {
+			flex: 0 0 50%;
+		}
+	}
+	&__text {
+		font-family: "Inter";
+		font-weight: 400;
+		font-size: 18/16 * 1rem;
+		line-height: 150%;
+		color: $gray;
+		p {
+			&:not(:last-child) {
+				@include adaptiv-value(margin-bottom, 30, 8.2, 1);
+			}
+		}
+		@media (min-width: #{$md2 + em}) {
+			max-width: 556px;
+			margin-right: 50px;
+		}
+		@media (max-width: #{$md3 + em}) {
+			font-size: 16/16 * 1rem;
+			line-height: 130%;
+		}
+		@include adaptiv-value(margin-bottom, 35, 29.6, 1);
+	}
+	&__button {
+		font-weight: 900;
+		font-size: 20/16 * 1rem;
+		line-height: 100%;
+		color: $yellow;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		@media (min-width: #{$md2 + em}) {
+			max-width: 335px;
+		}
+		@media (max-width: #{$md2 + em}) {
+			margin: 0 auto;
+		}
+		width: 100%;
+		max-width: 750px;
+		@include adaptiv-value(min-height, 58, 44, 1);
+		border: 2px solid $yellow;
+		border-radius: 3px;
+		transition: all 0.3s ease 0s;
+		@media (any-hover: hover) {
+			&:hover {
+				background-color: $yellow;
+				color: $blackLight;
+			}
+		}
+		@media (max-width: #{$md3 + em}) {
+			font-family: "Montserrat";
+			letter-spacing: 0.03em;
+			text-transform: uppercase;
+		}
+	}
+	&__video {
+		@media (min-width: #{$md2 + em}) {
+			align-self: center;
+			margin-left: 10px;
+		}
+		@media (max-width: #{$md2 + em}) {
+			margin: 0 auto;
+			margin-bottom: 25px;
+		}
+		width: 100%;
+		max-width: 750px;
+		@include adaptiv-value(height, 520, 258, 1);
+		position: relative;
+		iframe {
+			appearance: none;
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			right: 0;
+		}
+	}
+	&__play {
+		position: relative;
+		width: 140px;
+		height: 140px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: absolute;
+		top: 45.2%;
+		left: 50%;
+		transform: translateX(-50%);
+		cursor: pointer;
+		transition: all 0.3s ease 0s;
+		&::after {
+			content: "";
+			border-radius: 50%;
+			border: 1px solid $yellow;
+			box-sizing: border-box;
+			position: absolute;
+			z-index: 1;
+			transition: all 0.3s ease 0s;
+			width: 35px;
+			height: 35px;
+			animation: animPlay 2s linear infinite 1s;
+		}
+		&::before {
+			content: "";
+			border-radius: 50%;
+			border: 1px solid $yellow;
+			box-sizing: border-box;
+			position: absolute;
+			z-index: 1;
+			transition: all 0.3s ease 0s;
+			animation: animPlay 2s linear infinite 0s;
+		}
+		@media (max-width: #{$md2 + em}) {
+			top: auto;
+			bottom: 94px;
+		}
+		@media (max-width: #{$md3 + em}) {
+			width: 105px;
+			height: 105px;
+			&::after {
+				width: 20px;
+				height: 20px;
+				animation: animPlayMd3 2s linear infinite 1s;
+			}
+			&::before {
+				animation: animPlayMd3 2s linear infinite 0s;
+			}
+		}
+		@media (max-width: #{$md4 + em}) {
+			width: 62px;
+			height: 62px;
+			&::after {
+				width: 20px;
+				height: 20px;
+				animation: animPlayMd4 2s linear infinite 1s;
+			}
+			&::before {
+				animation: animPlayMd4 2s linear infinite 0s;
+			}
+		}
+	}
+	&__icon-play {
+		color: $yellow;
+		font-size: 60/16 * 1rem;
+		@media (max-width: #{$md3 + em}) {
+			font-size: 45/16 * 1rem;
+		}
+		@media (max-width: #{$md4 + em}) {
+			font-size: 26/16 * 1rem;
+		}
+		background: $blackLight;
+		border-radius: 50%;
+		overflow: hidden;
+		position: relative;
+		z-index: 2;
+		transition: all 0.3s ease 0s;
+		@media (any-hover: hover) {
+			&:hover {
+				color: $whiteDark;
+			}
+		}
+	}
+	&__arrow {
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 10;
+		cursor: pointer;
+		width: 28px;
+		margin: 0 auto;
+		color: $yellow;
+		font-size: 18/16 * 1rem;
+		height: 58px;
+		margin-bottom: 31px;
+		@media (max-width: #{$md2 + em}) {
+			height: 30px;
+			margin-bottom: 5px;
+		}
+		&::before {
+			position: absolute;
+			bottom: 0;
+			transition: all 0.3s ease 0s;
+			animation: animArrow 1s linear infinite alternate 1s;
+		}
+		@media (any-hover: hover) {
+			&:hover {
+				color: $whiteDark;
+			}
+		}
+	}
+}
+//====================================================================================================
+.products-main {
+	&__container {
+		@include adaptiv-value(padding-top, 111, 56.5, 1);
+		@include adaptiv-value(padding-bottom, 86, 56.5, 1);
+	}
+	&__body {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(335px, 1fr));
+		gap: 20px;
+		@media (max-width: 25.625em) {
+			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		}
+	}
+}
+.item-products-main {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	border: 2px solid $yellow;
+	border-radius: 3px;
+	padding: 65px 40px 30px 40px;
+	@media (max-width: 25.625em) {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	transition: all 0.3s ease 0s;
+	min-height: 374px;
+	@media (any-hover: hover) {
+		&:hover {
+			background-color: $yellow;
+			.item-products-main__title {
+				color: $blackLight;
+			}
+		}
+	}
+	&__image {
+		width: 253px;
+		height: 185px;
+		background-size: contain;
+		&:not(:last-child) {
+			margin-bottom: 44px;
+		}
+	}
+	&__title {
+		font-weight: 500;
+		font-size: 18/16 * 1rem;
+		line-height: 23/18 * 100%;
+		text-transform: uppercase;
+		color: $whiteDark;
+		transition: all 0.3s ease 0s;
+		&:not(:last-child) {
+			margin-bottom: 8px;
+		}
+		@media (any-hover: none) {
+			&:not(:last-child) {
+				margin-bottom: 2px;
+			}
+		}
+		@media (max-width: #{$md3 + em}) {
+			font-family: "Montserrat";
+			font-weight: 900;
+			font-size: 24/16 * 1rem;
+			line-height: 29/24 * 100%;
+			letter-spacing: 0.05em;
+		}
+	}
+	&__more {
+		font-family: "Inter";
+		font-weight: 400;
+		font-size: 16/16 * 1rem;
+		line-height: 19/16 * 100%;
+		color: $blackLight;
+		transition: all 0.3s ease 0s;
+		@media (any-hover: hover) {
+			text-decoration: underline;
+			text-decoration-color: transparent;
+			&:hover {
+				text-decoration-color: $blackLight;
+			}
+		}
+	}
+}
+//====================================================================================================
+.newsletter {
+	@media (max-width: #{$md3 + em}) {
+		margin-bottom: 61px;
+	}
+	&__container {
+		@media (min-width: #{$md3 + em}) {
+			@include adaptiv-value(padding-top, 94, 0, 1);
+			@include adaptiv-value(padding-bottom, 94, 0, 1);
+			position: relative;
+		}
+	}
+	&__body {
+		background: $yellow;
+		display: flex;
+		@media (max-width: 68.75em) {
+			justify-content: center;
+		}
+	}
+	&__content {
+		@media (min-width: 68.75em) {
+			flex: 0 0 50%;
+			padding: 35px 0 54px 65px;
+			position: relative;
+			z-index: 2;
+		}
+		@media (max-width: 68.75em) {
+			padding: 30px 20px 35px 20px;
+		}
+	}
+	&__title {
+		font-weight: 999;
+		font-size: 32/16 * 1rem;
+		line-height: 130%;
+		text-transform: uppercase;
+		&:not(:last-child) {
+			margin-bottom: 10px;
+		}
+		@media (max-width: 68.75em) and (min-width: #{$md3 + em}) {
+			max-width: 70%;
+		}
+		@media (max-width: #{$md3 + em}) {
+			font-family: "Montserrat";
+			font-weight: 900;
+			line-height: 115%;
+			letter-spacing: 0.04em;
+		}
+		@media (max-width: 25.625em) {
+			font-size: 26/16 * 1rem;
+		}
+	}
+	&__text {
+		font-weight: 500;
+		font-size: 18/16 * 1rem;
+		line-height: 150%;
+		text-transform: uppercase;
+		&:not(:last-child) {
+			margin-bottom: 25px;
+		}
+		@media (max-width: #{$md3 + em}) {
+			font-family: "Montserrat";
+			font-weight: 900;
+			font-size: 16/16 * 1rem;
+			line-height: 100%;
+			letter-spacing: 0.03em;
+		}
+	}
+	&__form {
+		&:not(:last-child) {
+			margin-bottom: 15px;
+		}
+	}
+	&__privacy {
+		font-family: "Inter";
+		font-weight: 400;
+		font-size: 14/16 * 1rem;
+		line-height: 100%;
+		text-transform: lowercase;
+		a {
+			color: inherit;
+			text-decoration: underline;
+			@media (any-hover: hover) {
+				&:hover {
+					color: black;
+					font-weight: 500;
+				}
+			}
+		}
+	}
+	&__image {
+		position: absolute;
+		right: 20px;
+		top: 0;
+		height: 100%;
+		width: 50%;
+		background-size: contain;
+		background-position: right;
+		z-index: 1;
+		@media (max-width: 68.75em) {
+			display: none;
+		}
+	}
+}
+.form-newsletter {
+	display: flex;
+	align-items: center;
+	@media (max-width: #{$md3 + em}) {
+		flex-direction: column;
+		align-items: start;
+	}
+	&__mail {
+		position: relative;
+		label {
+			font-family: "Inter";
+			font-weight: 500;
+			font-size: 18/16 * 1rem;
+			line-height: 100%;
+			position: absolute;
+			left: 20px;
+			top: 50%;
+			transform: translateY(-50%);
+			transition: all 0.3s ease 0s;
+		}
+		@media (max-width: 68.75em) {
+			flex: 1 1 auto;
+		}
+		@media (max-width: #{$md3 + em}) {
+			width: 100%;
+		}
+		&._active {
+			label {
+				font-size: 0.75rem;
+				top: 6px;
+				transform: none;
+			}
+		}
+	}
+	&__mail-input {
+		appearance: none;
+		font-family: "Inter";
+		font-weight: 500;
+		font-size: 18/16 * 1rem;
+		border: 2px solid $blackLight;
+		border-radius: 3px;
+		min-height: 58px;
+		background-color: $yellow;
+		padding: 10px 20px 0 20px;
+		width: calc(100% - 20px);
+		@media (min-width: #{$md3 + em}) {
+			&:not(:last-child) {
+				margin-right: 20px;
+			}
+		}
+		@media (max-width: #{$md3 + em}) {
+			width: 100%;
+		}
+		@media (min-width: #{$md3 + em}) {
+			min-width: 333px;
+		}
+	}
+	&__button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-weight: 900;
+		font-size: 20/16 * 1rem;
+		line-height: 100%;
+		color: $whiteDark;
+		background: $blackLight;
+		border: 2px solid $blackLight;
+		border-radius: 3px;
+		min-height: 58px;
+		transition: all 0.3s ease 0s;
+		@media (min-width: #{$md3 + em}) {
+			min-width: 220px;
+		}
+		@media (max-width: #{$md3 + em}) {
+			margin-top: 14px;
+			width: 100%;
+			font-family: "Montserrat";
+			letter-spacing: 0.05em;
+		}
+		@media (any-hover: hover) {
+			&:hover {
+				box-shadow: inset 0px 10px 20px 2px rgba(218, 187, 144, 0.6);
+			}
+		}
+	}
+}

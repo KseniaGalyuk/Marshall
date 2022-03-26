@@ -1,0 +1,102 @@
+.swiper-pagination-bullet {
+	cursor: pointer;
+	height: 5px;
+	background-color: $yellow;
+	width: 40.61px;
+	opacity: 0.5;
+	border-radius: 0;
+	transition: all 0.3s ease 0s;
+	&-active {
+		width: 81.21px;
+		opacity: 1;
+	}
+	@media (max-width: #{$md2 + em}) {
+		width: 45px;
+		&-active {
+			width: 90px;
+		}
+	}
+}
+.swiper-pagination {
+	max-width: $maxWidthContainer + px;
+	padding: 0 20px;
+	text-align: left;
+	margin-left: -5px;
+	margin-bottom: 95px;
+	bottom: 0;
+	@media (max-width: #{$md2 + em}) {
+		margin-bottom: 45px;
+		width: 100%;
+		max-width: 790px;
+		margin-left: -6px;
+		text-align: center;
+	}
+}
+.swiper-horizontal > .swiper-pagination-bullets,
+.swiper-pagination-bullets.swiper-pagination-horizontal,
+.swiper-pagination-custom,
+.swiper-pagination-fraction {
+	bottom: 0px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+.swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
+.swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
+	margin: 0 var(--swiper-pagination-bullet-horizontal-gap, 5px);
+	@media (max-width: #{$md2 + em}) {
+		margin: 0 var(--swiper-pagination-bullet-horizontal-gap, 6px);
+	}
+}
+._title {
+	font-size: 56/16 * 1rem;
+	line-height: 71/56 * 100%;
+	color: $yellow;
+	@media (min-width: #{$md3 + em}) {
+		font-weight: 999;
+		font-family: inherit;
+		letter-spacing: normal;
+	}
+	@media (max-width: 75em) {
+		font-size: 50/16 * 1rem;
+	}
+	font-family: "Montserrat";
+	font-weight: 900;
+	letter-spacing: 0.04em;
+	@media (max-width: #{$md4 + em}) {
+		font-size: 32/16 * 1rem;
+	}
+}
+._ibg {
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+	img {
+		display: none;
+	}
+}
+.navigation-header {
+	display: flex;
+	align-items: center;
+	&__line {
+		height: 1px;
+		width: 14px;
+		background-color: $gray;
+		margin: 0 5px;
+	}
+	&__elem {
+		font-family: "Inter";
+		font-weight: 400;
+		font-size: 14/16 * 1rem;
+		line-height: 150%;
+		color: $gray;
+		&:not(:last-child) {
+			cursor: pointer;
+			transition: all 0.3s ease 0s;
+			@media (any-hover: hover) {
+				&:hover {
+					color: $yellow;
+				}
+			}
+		}
+	}
+}
