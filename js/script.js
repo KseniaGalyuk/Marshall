@@ -29,10 +29,6 @@ if (document.querySelector('.main-page__slider')) {
 		observer: true,
 		observeParents: true,
 		preloadImages: false,
-		// autoplay: {
-		// 	delay: 3000,
-		// 	disableOnInteraction: false,
-		// }
 	});
 
 }
@@ -340,10 +336,9 @@ if (filterList != null) {
 			for (let index = 0; index < filtersActive.length; index++) {
 				if (catalogItem.classList.contains(filtersActive[index])) {
 					catalogItem.style.display = "flex";
-					continue;
+					break;
 				}
 				catalogItem.style.display = "none";
-				break;
 			}
 		});
 		_ibg();
